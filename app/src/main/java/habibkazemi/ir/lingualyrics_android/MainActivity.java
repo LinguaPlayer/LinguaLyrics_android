@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.About_fragment:
                 fragmentClass = AboutFragment.class;
+                break;
             default:
                 fragmentClass = LyricsFragment.class;
         }
