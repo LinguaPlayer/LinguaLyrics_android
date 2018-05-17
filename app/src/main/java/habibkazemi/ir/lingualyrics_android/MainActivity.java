@@ -1,8 +1,12 @@
 package habibkazemi.ir.lingualyrics_android;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,37 +15,74 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import habibkazemi.ir.lingualyrics_android.fragments.AboutFragment;
 import habibkazemi.ir.lingualyrics_android.fragments.LyricsFragment;
 import habibkazemi.ir.lingualyrics_android.fragments.RecentTracksFragment;
 import habibkazemi.ir.lingualyrics_android.fragments.SettingsFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
-    private DrawerLayout mDrawer;
-    private Toolbar mToolbar;
-    private NavigationView mNVDrawer;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawer;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.nvView)
+    NavigationView mNVDrawer;
+    @BindView(R.id.collapsing_toolbar_layout)
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.track_detail)
+    LinearLayout trackDetail;
+    @BindView(R.id.app_bar_layout)
+    AppBarLayout appBarLayout;
+
+    boolean appBarCollapsed = true;
+    int appBarScrollRange = -1;
     private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-
-        mDrawer = findViewById(R.id.drawer_layout);
-
-        mNVDrawer = findViewById(R.id.nvView);
         setupDrawerContent(mNVDrawer);
-
         mDrawerToggle = setupDrawerToggle();
         mDrawer.addDrawerListener(mDrawerToggle);
+        //I don't think it's a good idea to use colorPalette generator here
+//        generateColorPalette();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        appBarLayout.addOnOffsetChangedListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        appBarLayout.removeOnOffsetChangedListener(this);
+    }
+
+    private void generateColorPalette(/* get bitmpa? , or path?*/) {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ocean);
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                int mutedColor;
+                mutedColor = palette.getMutedColor(R.color.colorPrimary);
+                collapsingToolbarLayout.setContentScrimColor(mutedColor);
+            }
+        });
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -122,5 +163,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        if (appBarScrollRange == -1) {
+            appBarScrollRange = appBarLayout.getTotalScrollRange();
+        }
+        if (Math.abs(verticalOffset) > 3 * appBarScrollRange / 5) {
+            collapsingToolbarLayout.setTitle("Lingua Lyrics");
+            appBarCollapsed = true;
+            if (Math.abs(verticalOffset) > 4 * appBarScrollRange / 5) {
+                trackDetail.setVisibility(View.INVISIBLE);
+            } else {
+                collapsingToolbarLayout.setTitle(" ");
+                trackDetail.setVisibility(View.VISIBLE);
+                appBarCollapsed = false;
+            }
+        }
     }
 }
