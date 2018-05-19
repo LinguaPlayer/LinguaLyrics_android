@@ -11,12 +11,15 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     LinearLayout trackDetail;
     @BindView(R.id.app_bar_layout)
     AppBarLayout appBarLayout;
+    @BindView(R.id.nestedScrollView)
+    NestedScrollView nestedScrollView;
 
     boolean appBarCollapsed = true;
     int mAppBarScrollRange = -1;
@@ -55,11 +60,15 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         setSupportActionBar(mToolbar);
         mCollapsingToolbarLayout.setTitle(" ");
 
+        prepareNavDrawer();
+        //I don't think it's a good idea to use colorPalette generator here
+//        generateColorPalette();
+    }
+
+    private void prepareNavDrawer() {
         setupDrawerContent(mNVDrawer);
         mDrawerToggle = setupDrawerToggle();
         mDrawer.addDrawerListener(mDrawerToggle);
-        //I don't think it's a good idea to use colorPalette generator here
-//        generateColorPalette();
     }
 
     @Override
@@ -103,6 +112,8 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     }
 
     private void setupDrawerContent(NavigationView nvView) {
+        // Set default fragment in creation
+        selectDrawerItem(nvView.getMenu().getItem(0));
         nvView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -114,23 +125,44 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         );
     }
 
+    private void collapseAppBar() {
+        appBarLayout.setExpanded(false, true);
+    }
+    private void lockAppBar() {
+        ViewCompat.setNestedScrollingEnabled(nestedScrollView, false);
+    }
+
+    private void unLockAppBar() {
+        ViewCompat.setNestedScrollingEnabled(nestedScrollView, true);
+    }
+
     public void selectDrawerItem(MenuItem menuItem) {
+        Log.d("selectDrawerItem:", menuItem + "");
         Fragment fragment = null;
         Class fragmentClass;
         switch (menuItem.getItemId()) {
             case R.id.lyrics_fragment:
+                unLockAppBar();
                 fragmentClass = LyricsFragment.class;
                 break;
             case R.id.recent_tracks_fragment:
+                collapseAppBar();
+                lockAppBar();
                 fragmentClass = RecentTracksFragment.class;
                 break;
             case R.id.saved_lyrics_fragment:
+                collapseAppBar();
+                lockAppBar();
                 fragmentClass = RecentTracksFragment.class;
                 break;
             case R.id.settings_fragment:
+                collapseAppBar();
+                lockAppBar();
                 fragmentClass = SettingsFragment.class;
                 break;
             case R.id.About_fragment:
+                collapseAppBar();
+                lockAppBar();
                 fragmentClass = AboutFragment.class;
                 break;
             default:
@@ -152,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         setTitle(menuItem.getTitle());
         mDrawer.closeDrawers();
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item))
