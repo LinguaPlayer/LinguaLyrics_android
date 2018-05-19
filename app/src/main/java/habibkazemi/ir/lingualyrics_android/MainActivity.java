@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +21,7 @@ import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     @BindView(R.id.track_detail)
     LinearLayout trackDetail;
     @BindView(R.id.app_bar_layout)
-    AppBarLayout appBarLayout;
+    AppBarLayout mAppBarLayout;
     @BindView(R.id.nestedScrollView)
     NestedScrollView nestedScrollView;
 
@@ -74,13 +76,13 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     @Override
     protected void onResume() {
         super.onResume();
-        appBarLayout.addOnOffsetChangedListener(this);
+        mAppBarLayout.addOnOffsetChangedListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        appBarLayout.removeOnOffsetChangedListener(this);
+        mAppBarLayout.removeOnOffsetChangedListener(this);
     }
 
     private void generateColorPalette(/* get bitmpa? , or path?*/) {
@@ -126,14 +128,41 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     }
 
     private void collapseAppBar() {
-        appBarLayout.setExpanded(false, true);
+        // Collapse the AppBarLayout with animation
+        mAppBarLayout.setExpanded(false, true);
     }
+
     private void lockAppBar() {
+        /* Disable the nestedScrolling to disable expanding the
+         appBar with dragging the nestedScrollView below it */
         ViewCompat.setNestedScrollingEnabled(nestedScrollView, false);
+
+        /* But still appBar is expandable with dragging the appBar itself
+        and below code disables that too
+         */
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+        behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+            @Override
+            public boolean canDrag(AppBarLayout appBarLayout) {
+                return false;
+            }
+        });
     }
 
     private void unLockAppBar() {
         ViewCompat.setNestedScrollingEnabled(nestedScrollView, true);
+
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+        if (behavior != null) {
+            behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+                @Override
+                public boolean canDrag(AppBarLayout appBarLayout) {
+                    return true;
+                }
+            });
+        }
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
