@@ -27,8 +27,8 @@ dependencies {
     implementation "com.android.support:support-v4:$rootProject.supportLibraryVersion"
     implementation "com.android.support:support-vector-drawable:$rootProject.supportLibraryVersion"
     implementation "com.android.support:palette-v7:$rootProject.supportLibraryVersion"
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeCompilerVersion"
 
     //Test dependencies
     testImplementation "junit:junit:$rootProject.jUnitVersion"

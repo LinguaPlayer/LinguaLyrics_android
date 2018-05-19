@@ -17,9 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import butterknife.BindView;
@@ -38,14 +36,14 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     @BindView(R.id.nvView)
     NavigationView mNVDrawer;
     @BindView(R.id.collapsing_toolbar_layout)
-    CollapsingToolbarLayout collapsingToolbarLayout;
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
     @BindView(R.id.track_detail)
     LinearLayout trackDetail;
     @BindView(R.id.app_bar_layout)
     AppBarLayout appBarLayout;
 
     boolean appBarCollapsed = true;
-    int appBarScrollRange = -1;
+    int mAppBarScrollRange = -1;
     private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
@@ -53,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        setSupportActionBar(mToolbar);
+        mCollapsingToolbarLayout.setTitle(" ");
 
         setupDrawerContent(mNVDrawer);
         mDrawerToggle = setupDrawerToggle();
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
             public void onGenerated(Palette palette) {
                 int mutedColor;
                 mutedColor = palette.getMutedColor(R.color.colorPrimary);
-                collapsingToolbarLayout.setContentScrimColor(mutedColor);
+                mCollapsingToolbarLayout.setContentScrimColor(mutedColor);
             }
         });
     }
@@ -167,19 +168,19 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        if (appBarScrollRange == -1) {
-            appBarScrollRange = appBarLayout.getTotalScrollRange();
+        // TODO: improve this animation and made a transition from trackDetail to title
+        if (mAppBarScrollRange == -1) {
+            mAppBarScrollRange = appBarLayout.getTotalScrollRange();
         }
-        if (Math.abs(verticalOffset) > 3 * appBarScrollRange / 5) {
-            collapsingToolbarLayout.setTitle("Lingua Lyrics");
+        if (Math.abs(verticalOffset) > 3 * mAppBarScrollRange / 5) {
+            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.lingua_lyrics));
+            trackDetail.animate().alpha(0.0f).setDuration(200);
             appBarCollapsed = true;
-            if (Math.abs(verticalOffset) > 4 * appBarScrollRange / 5) {
-                trackDetail.setVisibility(View.INVISIBLE);
-            } else {
-                collapsingToolbarLayout.setTitle(" ");
-                trackDetail.setVisibility(View.VISIBLE);
-                appBarCollapsed = false;
-            }
+        }
+        else {
+            mCollapsingToolbarLayout.setTitle(" ");
+            trackDetail.animate().alpha(1f).setDuration(50);
+            appBarCollapsed = false;
         }
     }
 }
