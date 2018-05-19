@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
@@ -43,15 +42,17 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     @BindView(R.id.collapsing_toolbar_layout)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
     @BindView(R.id.track_detail)
-    LinearLayout trackDetail;
+    LinearLayout mTrackDetail;
     @BindView(R.id.app_bar_layout)
     AppBarLayout mAppBarLayout;
     @BindView(R.id.nestedScrollView)
-    NestedScrollView nestedScrollView;
+    NestedScrollView mNestedScrollView;
 
-    boolean appBarCollapsed = true;
+    boolean mAppBarCollapsed = true;
     int mAppBarScrollRange = -1;
     private ActionBarDrawerToggle mDrawerToggle;
+
+    private String mCurrentFragmentName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         mCollapsingToolbarLayout.setTitle(" ");
 
         prepareNavDrawer();
+
+        mCurrentFragmentName = getResources().getString(R.string.lingua_lyrics);
         //I don't think it's a good idea to use colorPalette generator here
 //        generateColorPalette();
     }
@@ -134,8 +137,8 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
     private void lockAppBar() {
         /* Disable the nestedScrolling to disable expanding the
-         appBar with dragging the nestedScrollView below it */
-        ViewCompat.setNestedScrollingEnabled(nestedScrollView, false);
+         appBar with dragging the mNestedScrollView below it */
+        ViewCompat.setNestedScrollingEnabled(mNestedScrollView, false);
 
         /* But still appBar is expandable with dragging the appBar itself
         and below code disables that too
@@ -151,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     }
 
     private void unLockAppBar() {
-        ViewCompat.setNestedScrollingEnabled(nestedScrollView, true);
+        ViewCompat.setNestedScrollingEnabled(mNestedScrollView, true);
 
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
@@ -173,29 +176,35 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
             case R.id.lyrics_fragment:
                 unLockAppBar();
                 fragmentClass = LyricsFragment.class;
+                mCurrentFragmentName = getResources().getString(R.string.lingua_lyrics);
                 break;
             case R.id.recent_tracks_fragment:
                 collapseAppBar();
                 lockAppBar();
                 fragmentClass = RecentTracksFragment.class;
+                mCurrentFragmentName = getResources().getString(R.string.recent_lyrics);
                 break;
             case R.id.saved_lyrics_fragment:
                 collapseAppBar();
                 lockAppBar();
                 fragmentClass = RecentTracksFragment.class;
+                mCurrentFragmentName = getResources().getString(R.string.saved_lyrics);
                 break;
             case R.id.settings_fragment:
                 collapseAppBar();
                 lockAppBar();
                 fragmentClass = SettingsFragment.class;
+                mCurrentFragmentName = getResources().getString(R.string.settings);
                 break;
             case R.id.About_fragment:
                 collapseAppBar();
                 lockAppBar();
                 fragmentClass = AboutFragment.class;
+                mCurrentFragmentName = getResources().getString(R.string.about);
                 break;
             default:
                 fragmentClass = LyricsFragment.class;
+                mCurrentFragmentName = getResources().getString(R.string.lingua_lyrics);
         }
 
         try {
@@ -230,19 +239,19 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        // TODO: improve this animation and made a transition from trackDetail to title
+        // TODO: improve this animation and made a transition from mTrackDetail to title
         if (mAppBarScrollRange == -1) {
             mAppBarScrollRange = appBarLayout.getTotalScrollRange();
         }
         if (Math.abs(verticalOffset) > 3 * mAppBarScrollRange / 5) {
-            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.lingua_lyrics));
-            trackDetail.animate().alpha(0.0f).setDuration(200);
-            appBarCollapsed = true;
+            mCollapsingToolbarLayout.setTitle(mCurrentFragmentName);
+            mTrackDetail.animate().alpha(0.0f).setDuration(200);
+            mAppBarCollapsed = true;
         }
         else {
             mCollapsingToolbarLayout.setTitle(" ");
-            trackDetail.animate().alpha(1f).setDuration(50);
-            appBarCollapsed = false;
+            mTrackDetail.animate().alpha(1f).setDuration(50);
+            mAppBarCollapsed = false;
         }
     }
 }
