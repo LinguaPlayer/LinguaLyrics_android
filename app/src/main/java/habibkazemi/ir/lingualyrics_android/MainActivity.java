@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -187,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     public void onBackPressed() {
         boolean wasOpen = false;
         if (mCurrentFragmentName == getResources().getString(R.string.lingua_lyrics))
-            wasOpen = ((LyricsFragment)currentFragment).isSearachViewOpen();
+            wasOpen = ((LyricsFragment)currentFragment).isSearchViewOpen();
         if (wasOpen)
             ((LyricsFragment)currentFragment).closeSearchView();
         else
@@ -290,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
             case R.id.coordinator_layout:
             case R.id.nestedScrollView:
                 if (mCurrentFragmentName == getResources().getString(R.string.lingua_lyrics))
-                    if (((LyricsFragment)currentFragment).isSearachViewOpen())
+                    if (((LyricsFragment)currentFragment).isSearchViewOpen())
                         ((LyricsFragment)currentFragment).closeSearchView();
                 break;
 

@@ -84,7 +84,7 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean isSearachViewOpen() {
+    public boolean isSearchViewOpen() {
          return mSearchView.isSearchOpen();
     }
 
