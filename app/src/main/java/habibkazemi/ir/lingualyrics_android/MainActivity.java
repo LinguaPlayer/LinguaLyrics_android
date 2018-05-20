@@ -21,7 +21,10 @@ import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import butterknife.BindView;
@@ -31,7 +34,7 @@ import habibkazemi.ir.lingualyrics_android.fragments.LyricsFragment;
 import habibkazemi.ir.lingualyrics_android.fragments.RecentTracksFragment;
 import habibkazemi.ir.lingualyrics_android.fragments.SettingsFragment;
 
-public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener, View.OnTouchListener{
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
@@ -47,12 +50,15 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     AppBarLayout mAppBarLayout;
     @BindView(R.id.nestedScrollView)
     NestedScrollView mNestedScrollView;
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout mCoordinatorLayout;
 
     boolean mAppBarCollapsed = true;
     int mAppBarScrollRange = -1;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private String mCurrentFragmentName;
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 //        generateColorPalette();
     }
 
+
     private void prepareNavDrawer() {
         setupDrawerContent(mNVDrawer);
         mDrawerToggle = setupDrawerToggle();
@@ -80,6 +87,9 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     protected void onResume() {
         super.onResume();
         mAppBarLayout.addOnOffsetChangedListener(this);
+        mNestedScrollView.setOnTouchListener(this);
+        mCoordinatorLayout.setOnTouchListener(this);
+
     }
 
     @Override
@@ -135,6 +145,11 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         mAppBarLayout.setExpanded(false, true);
     }
 
+    private void expandAppBar() {
+        // Collapse the AppBarLayout with animation
+        mAppBarLayout.setExpanded(true, true);
+    }
+
     private void lockAppBar() {
         /* Disable the nestedScrolling to disable expanding the
          appBar with dragging the mNestedScrollView below it */
@@ -166,6 +181,17 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                 }
             });
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        boolean wasOpen = false;
+        if (mCurrentFragmentName == getResources().getString(R.string.lingua_lyrics))
+            wasOpen = ((LyricsFragment)currentFragment).isSearachViewOpen();
+        if (wasOpen)
+            ((LyricsFragment)currentFragment).closeSearchView();
+        else
+            super.onBackPressed();
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
@@ -209,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
         try {
             fragment = (Fragment) fragmentClass.newInstance();
+            currentFragment = fragment;
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -218,7 +245,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
         menuItem.setChecked(true);
-
         setTitle(menuItem.getTitle());
         mDrawer.closeDrawers();
     }
@@ -231,9 +257,11 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
-                return true;
+                break;
+            case R.id.search:
+                expandAppBar();
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -243,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         if (mAppBarScrollRange == -1) {
             mAppBarScrollRange = appBarLayout.getTotalScrollRange();
         }
+
         if (Math.abs(verticalOffset) > 3 * mAppBarScrollRange / 5) {
             mCollapsingToolbarLayout.setTitle(mCurrentFragmentName);
             mTrackDetail.animate().alpha(0.0f).setDuration(200);
@@ -253,5 +282,19 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
             mTrackDetail.animate().alpha(1f).setDuration(50);
             mAppBarCollapsed = false;
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (v.getId()) {
+            case R.id.coordinator_layout:
+            case R.id.nestedScrollView:
+                if (mCurrentFragmentName == getResources().getString(R.string.lingua_lyrics))
+                    if (((LyricsFragment)currentFragment).isSearachViewOpen())
+                        ((LyricsFragment)currentFragment).closeSearchView();
+                break;
+
+        }
+        return false;
     }
 }

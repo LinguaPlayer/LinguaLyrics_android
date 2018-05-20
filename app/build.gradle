@@ -30,6 +30,8 @@ dependencies {
     implementation "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeCompilerVersion"
 
+    implementation 'com.miguelcatalan:materialsearchview:1.0.0'
+
     //Test dependencies
     testImplementation "junit:junit:$rootProject.jUnitVersion"
     androidTestImplementation "com.android.support.test:runner:$rootProject.testVersion"

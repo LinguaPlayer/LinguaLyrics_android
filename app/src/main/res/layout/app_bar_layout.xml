@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:id="@+id/coordinator_layout"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
@@ -38,13 +39,17 @@
                 android:layout_gravity="bottom"
                 android:background="@drawable/scrim"/>
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_collapseMode="pin">
-            </android.support.v7.widget.Toolbar>
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    app:layout_collapseMode="pin">
+                </android.support.v7.widget.Toolbar>
+                <com.miguelcatalan.materialsearchview.MaterialSearchView
+                    android:id="@+id/search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
             <LinearLayout
                 android:id="@+id/track_detail"
                 android:layout_width="wrap_content"
