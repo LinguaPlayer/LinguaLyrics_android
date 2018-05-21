@@ -26,8 +26,7 @@
             android:fitsSystemWindows="true">
 
             <ImageView
-                android:id="@+id/image"
-                android:src="@drawable/ocean"
+                android:id="@+id/cover_art"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
@@ -58,16 +57,17 @@
                 android:layout_marginStart="20dp"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/music_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="25sp"
-                    android:text="@string/temp_title"/>
+                    android:text="@string/title"/>
                 <TextView
                     android:id="@+id/artist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:text="@string/temp_artist"/>
+                    android:text="@string/artist"/>
             </LinearLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>

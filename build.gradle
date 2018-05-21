@@ -42,4 +42,8 @@ ext {
 
     butterknifeVersion = '8.8.1'
     butterknifeCompilerVersion = '8.8.1'
+    materialSearchViewVersion = '1.0.0'
+    okhttp = '3.10.0'
+
+
 }

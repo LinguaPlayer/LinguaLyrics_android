@@ -1,6 +1,7 @@
 package habibkazemi.ir.lingualyrics_android.fragments;
 
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,14 +12,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import habibkazemi.ir.lingualyrics_android.MainActivity;
 import habibkazemi.ir.lingualyrics_android.R;
+import habibkazemi.ir.lingualyrics_android.model.Lyric;
+import habibkazemi.ir.lingualyrics_android.model.Result;
+import habibkazemi.ir.lingualyrics_android.remote.LyricsApi;
+import habibkazemi.ir.lingualyrics_android.remote.LyricsService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,8 +38,10 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
     private Unbinder unbinder;
     MaterialSearchView mSearchView;
 
-    @BindView(R.id.lyrics_fragment)
-    public FrameLayout fragment_layout;
+    @BindView(R.id.lyric_text)
+    public TextView lyricTexView;
+    @BindView(R.id.progress_loader)
+    public AVLoadingIndicatorView loadingIndicator;
 
     public LyricsFragment() {
         // Required empty public constructor
@@ -68,6 +80,14 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
         mSearchView.setOnQueryTextListener(this);
     }
 
+    private void showSpinner() {
+        loadingIndicator.setVisibility(View.VISIBLE);
+    }
+
+    private void hideSpinner() {
+        loadingIndicator.setVisibility(View.INVISIBLE);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -94,7 +114,30 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        Log.d("onQueryTextSubmit", query);
+
+        lyricTexView.setText("");
+        showSpinner();
+        LyricsService lyricsService = LyricsApi.getLyricService(getContext());
+        lyricsService.getLyric(query, "").enqueue(new Callback<Lyric>() {
+            @Override
+            public void onResponse(Call<Lyric> call, Response<Lyric> response) {
+                String text = "";
+                if (response.isSuccessful()) {
+                    Result result = response.body().getResult();
+                    ((MainActivity)getActivity()).onLyricFetch(result.getCoverArtImageUrl(), result.getArtist(), result.getTitle());
+                    hideSpinner();
+                    text = result.getLyricText();
+                    if (text != null)
+                        lyricTexView.setText(text);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Lyric> call, Throwable t) {
+                Log.d("response", "failure");
+            }
+        });
+
         return false;
     }
 
@@ -103,4 +146,9 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
         Log.d("onQueryTextChange", newText);
         return false;
     }
+
+    public interface OnLyricDownlod {
+        void onLyricFetch(String imageUrl, String artist, String title);
+    }
+
 }

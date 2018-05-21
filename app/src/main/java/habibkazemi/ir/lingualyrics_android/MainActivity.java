@@ -24,7 +24,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +37,7 @@ import habibkazemi.ir.lingualyrics_android.fragments.LyricsFragment;
 import habibkazemi.ir.lingualyrics_android.fragments.RecentTracksFragment;
 import habibkazemi.ir.lingualyrics_android.fragments.SettingsFragment;
 
-public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener, View.OnTouchListener{
+public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener, View.OnTouchListener, LyricsFragment.OnLyricDownlod{
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
@@ -51,6 +55,13 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     NestedScrollView mNestedScrollView;
     @BindView(R.id.coordinator_layout)
     CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.artist)
+    TextView artistTextView;
+    @BindView(R.id.music_title)
+    TextView musicTitleTextView;
+    @BindView(R.id.cover_art)
+    ImageView coverArtImageView;
+
 
     boolean mAppBarCollapsed = true;
     int mAppBarScrollRange = -1;
@@ -295,5 +306,12 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
         }
         return false;
+    }
+
+    @Override
+    public void onLyricFetch(String imageUrl, String artist, String title) {
+        musicTitleTextView.setText(title);
+        artistTextView.setText(artist);
+        Picasso.get().load(imageUrl).into(coverArtImageView);
     }
 }
