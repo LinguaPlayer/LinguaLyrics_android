@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/section1" android:checkableBehavior="single">
-        <item android:id="@+id/lyrics_fragment"
+        <item android:id="@+id/nav_lyrics"
               android:title="Lyrics"
               android:icon="@drawable/ic_menu_lyrics"/>
-        <item android:id="@+id/recent_tracks_fragment"
+        <item android:id="@+id/nav_recent_tracks"
             android:title="Recent Tracks"
             android:icon="@drawable/ic_menu_recent_tracks"/>
-        <item android:id="@+id/saved_lyrics_fragment"
+        <item android:id="@+id/nav_saved_lyrics"
             android:title="Saved Lyrics"
             android:icon="@drawable/ic_menu_saved_lyrics"/>
     </group>
 
     <group android:id="@+id/section2" android:checkableBehavior="single">
-        <item android:id="@+id/settings_fragment"
+        <item android:id="@+id/nav_settings"
             android:title="Settings"
             android:icon="@drawable/ic_menu_settings"/>
-        <item android:id="@+id/About_fragment"
+        <item android:id="@+id/nav_About"
             android:title="About"
             android:icon="@drawable/ic_menu_about"/>
     </group>

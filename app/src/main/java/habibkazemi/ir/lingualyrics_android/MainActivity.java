@@ -11,6 +11,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -35,7 +36,9 @@ import butterknife.ButterKnife;
 import habibkazemi.ir.lingualyrics_android.fragments.AboutFragment;
 import habibkazemi.ir.lingualyrics_android.fragments.LyricsFragment;
 import habibkazemi.ir.lingualyrics_android.fragments.RecentTracksFragment;
+import habibkazemi.ir.lingualyrics_android.fragments.SavedLyricsFragment;
 import habibkazemi.ir.lingualyrics_android.fragments.SettingsFragment;
+import habibkazemi.ir.lingualyrics_android.util.Constants;
 
 public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener, View.OnTouchListener, LyricsFragment.OnLyricDownlod{
 
@@ -67,8 +70,8 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     int mAppBarScrollRange = -1;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private String mCurrentFragmentName;
-    private Fragment currentFragment;
+    private int mCurrentFragmentID;
+    private Fragment mCurrentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,18 +82,12 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         setSupportActionBar(mToolbar);
         mCollapsingToolbarLayout.setTitle(" ");
 
-        prepareNavDrawer();
-
-        mCurrentFragmentName = getResources().getString(R.string.lingua_lyrics);
-        //I don't think it's a good idea to use colorPalette generator here
+        if (savedInstanceState == null)
+            mCurrentFragmentID = R.id.nav_lyrics;
+        else
+            mCurrentFragmentID = savedInstanceState.getInt(Constants.KEY_CURRENT_FRAGMENT_ID, R.id.nav_lyrics);
+//        I don't think it's a good idea to use colorPalette generator here
 //        generateColorPalette();
-    }
-
-
-    private void prepareNavDrawer() {
-        setupDrawerContent(mNVDrawer);
-        mDrawerToggle = setupDrawerToggle();
-        mDrawer.addDrawerListener(mDrawerToggle);
     }
 
     @Override
@@ -100,6 +97,12 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         mNestedScrollView.setOnTouchListener(this);
         mCoordinatorLayout.setOnTouchListener(this);
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Constants.KEY_CURRENT_FRAGMENT_ID, mCurrentFragmentID);
     }
 
     @Override
@@ -120,6 +123,12 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         });
     }
 
+    private void prepareNavDrawer() {
+        setupDrawerContent(mNVDrawer);
+        mDrawerToggle = setupDrawerToggle();
+        mDrawer.addDrawerListener(mDrawerToggle);
+    }
+
     private ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, mDrawer,mToolbar, R.string.drawer_open, R.string.drawer_close);
     }
@@ -127,6 +136,9 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        /* I put prepareNavDrawer here because calling it onCreate makes a bug
+         when rotation happens and recreates the activity, the behaviour in lockAppBar is null */
+        prepareNavDrawer();
         mDrawerToggle.syncState();
     }
 
@@ -137,8 +149,8 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     }
 
     private void setupDrawerContent(NavigationView nvView) {
-        // Set default fragment in creation
-        selectDrawerItem(nvView.getMenu().getItem(0));
+        // show default fragment in creation
+        showFragment(mCurrentFragmentID);
         nvView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -162,14 +174,17 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
     private void lockAppBar() {
         /* Disable the nestedScrolling to disable expanding the
-         appBar with dragging the mNestedScrollView below it */
+           appBar with dragging the mNestedScrollView below it */
         ViewCompat.setNestedScrollingEnabled(mNestedScrollView, false);
 
         /* But still appBar is expandable with dragging the appBar itself
-        and below code disables that too
-         */
+           and below code disables that too */
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+
+        if (behavior == null)
+            return;
+
         behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
             @Override
             public boolean canDrag(AppBarLayout appBarLayout) {
@@ -183,81 +198,135 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-        if (behavior != null) {
-            behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
-                @Override
-                public boolean canDrag(AppBarLayout appBarLayout) {
-                    return true;
-                }
-            });
-        }
+
+        if (behavior == null)
+            return;
+
+        behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+            @Override
+            public boolean canDrag(AppBarLayout appBarLayout) {
+                return true;
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
         boolean wasOpen = false;
-        if (mCurrentFragmentName == getResources().getString(R.string.lingua_lyrics))
-            wasOpen = ((LyricsFragment)currentFragment).isSearchViewOpen();
+        if (mCurrentFragmentID == R.id.nav_lyrics)
+            wasOpen = ((LyricsFragment) mCurrentFragment).isSearchViewOpen();
         if (wasOpen)
-            ((LyricsFragment)currentFragment).closeSearchView();
+            ((LyricsFragment) mCurrentFragment).closeSearchView();
         else
             super.onBackPressed();
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
-        Log.d("selectDrawerItem:", menuItem + "");
-        Fragment fragment = null;
-        Class fragmentClass;
-        switch (menuItem.getItemId()) {
-            case R.id.lyrics_fragment:
-                unLockAppBar();
-                fragmentClass = LyricsFragment.class;
-                mCurrentFragmentName = getResources().getString(R.string.lingua_lyrics);
-                break;
-            case R.id.recent_tracks_fragment:
+        int id = menuItem.getItemId();
+        showFragment(id);
+    }
+
+    public void prepareAppBarForSelectedItem(int id) {
+        switch (id) {
+            case R.id.nav_recent_tracks:
                 collapseAppBar();
                 lockAppBar();
-                fragmentClass = RecentTracksFragment.class;
-                mCurrentFragmentName = getResources().getString(R.string.recent_lyrics);
                 break;
-            case R.id.saved_lyrics_fragment:
+            case R.id.nav_saved_lyrics:
                 collapseAppBar();
                 lockAppBar();
-                fragmentClass = RecentTracksFragment.class;
-                mCurrentFragmentName = getResources().getString(R.string.saved_lyrics);
                 break;
-            case R.id.settings_fragment:
+            case R.id.nav_settings:
                 collapseAppBar();
                 lockAppBar();
-                fragmentClass = SettingsFragment.class;
-                mCurrentFragmentName = getResources().getString(R.string.settings);
                 break;
-            case R.id.About_fragment:
+            case R.id.nav_About:
                 collapseAppBar();
                 lockAppBar();
-                fragmentClass = AboutFragment.class;
-                mCurrentFragmentName = getResources().getString(R.string.about);
                 break;
             default:
-                fragmentClass = LyricsFragment.class;
-                mCurrentFragmentName = getResources().getString(R.string.lingua_lyrics);
+                unLockAppBar();
+                break;
         }
+    }
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-            currentFragment = fragment;
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
+    private String getTag(int id) {
+        switch (id) {
+            case R.id.nav_recent_tracks:
+                return Constants.ID_RECENT_TRACKS;
+            case R.id.nav_saved_lyrics:
+                return Constants.ID_SAVED_LYRICS;
+            case R.id.nav_settings:
+                return Constants.ID_SETTINGS;
+            case R.id.nav_About:
+                return Constants.ID_ABOUT;
+            default:
+                return Constants.ID_LYRICS;
         }
+    }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-        menuItem.setChecked(true);
-        setTitle(menuItem.getTitle());
+    private String getTitle(int id) {
+        switch (id) {
+            case R.id.nav_recent_tracks:
+                return getResources().getString(R.string.recent_lyrics);
+            case R.id.nav_saved_lyrics:
+                return getResources().getString(R.string.saved_lyrics);
+            case R.id.nav_settings:
+                return getResources().getString(R.string.settings);
+            case R.id.nav_About:
+                return getResources().getString(R.string.about);
+            default:
+                return getResources().getString(R.string.lingua_lyrics);
+        }
+    }
+
+    private Fragment getNewFragment(int id) {
+        switch (id) {
+            case R.id.nav_recent_tracks:
+                return new RecentTracksFragment();
+            case R.id.nav_saved_lyrics:
+                return new SavedLyricsFragment();
+            case R.id.nav_settings:
+                return new SettingsFragment();
+            case R.id.nav_About:
+                return new AboutFragment();
+            default:
+                return new LyricsFragment();
+        }
+    }
+
+    private void showFragment(int id) {
+        String tag = getTag(id);
+        Fragment fragment = getNewFragment(id);
+        showFragment(fragment, id, tag);
+    }
+
+    private void showFragment(Fragment fragment, int id, String tag) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        ft.replace(R.id.flContent, fragment, tag)
+          .commit();
+
+        prepareAppBarForSelectedItem(id);
+        updateCheckedItem(id);
+        mCurrentFragmentID = id;
+        mCurrentFragment = fragment;
+        setTitle(getTitle(id));
+        closeDrawers();
+    }
+
+    public void closeDrawers() {
         mDrawer.closeDrawers();
     }
+
+    private void updateCheckedItem(int id) {
+        if (mNVDrawer.getMenu().findItem(id) != null) {
+            Log.d("MainActivity", "Item found in nav drawer");
+            mNVDrawer.getMenu().findItem(id).setChecked(true);
+        }
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -283,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         }
 
         if (Math.abs(verticalOffset) > 3 * mAppBarScrollRange / 5) {
-            mCollapsingToolbarLayout.setTitle(mCurrentFragmentName);
+            mCollapsingToolbarLayout.setTitle(getTitle(mCurrentFragmentID));
             mTrackDetail.animate().alpha(0.0f).setDuration(200);
             mAppBarCollapsed = true;
         }
@@ -299,11 +368,10 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         switch (v.getId()) {
             case R.id.coordinator_layout:
             case R.id.nestedScrollView:
-                if (mCurrentFragmentName == getResources().getString(R.string.lingua_lyrics))
-                    if (((LyricsFragment)currentFragment).isSearchViewOpen())
-                        ((LyricsFragment)currentFragment).closeSearchView();
+                if (mCurrentFragmentID == R.id.nav_lyrics)
+                    if (((LyricsFragment) mCurrentFragment).isSearchViewOpen())
+                        ((LyricsFragment) mCurrentFragment).closeSearchView();
                 break;
-
         }
         return false;
     }
@@ -314,4 +382,5 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         artistTextView.setText(artist);
         Picasso.get().load(imageUrl).into(coverArtImageView);
     }
+
 }
