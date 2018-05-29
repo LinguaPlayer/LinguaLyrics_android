@@ -1,10 +1,10 @@
 package habibkazemi.ir.lingualyrics_android.fragments;
 
-
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,20 +20,15 @@ import com.wang.avi.AVLoadingIndicatorView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import habibkazemi.ir.lingualyrics_android.MainActivity;
 import habibkazemi.ir.lingualyrics_android.R;
+import habibkazemi.ir.lingualyrics_android.loaders.LyricAsyncTaskLoader;
 import habibkazemi.ir.lingualyrics_android.model.Lyric;
-import habibkazemi.ir.lingualyrics_android.model.Result;
-import habibkazemi.ir.lingualyrics_android.remote.LyricsApi;
-import habibkazemi.ir.lingualyrics_android.remote.LyricsService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import habibkazemi.ir.lingualyrics_android.util.Constants;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LyricsFragment extends Fragment implements MaterialSearchView.OnQueryTextListener {
+public class LyricsFragment extends Fragment implements MaterialSearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<Lyric> {
 
     private Unbinder unbinder;
     MaterialSearchView mSearchView;
@@ -51,6 +46,7 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        getLoaderManager().initLoader(Constants.LYRIC_LOADER_ID, null, this);
     }
 
     @Override
@@ -114,41 +110,48 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-
         lyricTexView.setText("");
         showSpinner();
-        LyricsService lyricsService = LyricsApi.getLyricService(getContext());
-        lyricsService.getLyric(query, "").enqueue(new Callback<Lyric>() {
-            @Override
-            public void onResponse(Call<Lyric> call, Response<Lyric> response) {
-                String text = "";
-                if (response.isSuccessful()) {
-                    Result result = response.body().getResult();
-                    ((MainActivity)getActivity()).onLyricFetch(result.getCoverArtImageUrl(), result.getArtist(), result.getTitle());
-                    hideSpinner();
-                    text = result.getLyricText();
-                    if (text != null)
-                        lyricTexView.setText(text);
-                }
-            }
 
-            @Override
-            public void onFailure(Call<Lyric> call, Throwable t) {
-                Log.d("response", "failure");
-            }
-        });
-
+        Bundle args = new Bundle();
+        args.putString(Constants.SEARCH_QUERY_URL_EXTRA, query);
+        getLoaderManager().restartLoader(Constants.LYRIC_LOADER_ID, args, this);
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        Log.d("onQueryTextChange", newText);
         return false;
     }
 
-    public interface OnLyricDownlod {
-        void onLyricFetch(String imageUrl, String artist, String title);
+    public void onLyricDownload(Lyric lyric) {
+       hideSpinner();
+       // TODO: Handle errors in proper way and show proper icon and text for NOT FOUND, NETWORK ERROR , ...
+
+       String lyricText = "Lyric not found or Some error happened";
+
+       if (lyric != null)
+           lyricText = lyric.getResult().getLyricText();
+       lyricTexView.setText(lyricText);
     }
 
+    @Override
+    public Loader<Lyric> onCreateLoader(int id, Bundle args) {
+        return new LyricAsyncTaskLoader(getActivity(), args);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Lyric> loader, Lyric lyric) {
+        ((OnLyricListener) getActivity()).onLyricFetchComplete(lyric);
+        onLyricDownload(lyric);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Lyric> loader) {
+
+    }
+
+    public interface OnLyricListener {
+        void onLyricFetchComplete(Lyric lyric);
+    }
 }

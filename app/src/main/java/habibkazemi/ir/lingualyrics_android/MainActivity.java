@@ -38,9 +38,10 @@ import habibkazemi.ir.lingualyrics_android.fragments.LyricsFragment;
 import habibkazemi.ir.lingualyrics_android.fragments.RecentTracksFragment;
 import habibkazemi.ir.lingualyrics_android.fragments.SavedLyricsFragment;
 import habibkazemi.ir.lingualyrics_android.fragments.SettingsFragment;
+import habibkazemi.ir.lingualyrics_android.model.Lyric;
 import habibkazemi.ir.lingualyrics_android.util.Constants;
 
-public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener, View.OnTouchListener, LyricsFragment.OnLyricDownlod{
+public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener, View.OnTouchListener, LyricsFragment.OnLyricListener{
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
@@ -322,7 +323,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
     private void updateCheckedItem(int id) {
         if (mNVDrawer.getMenu().findItem(id) != null) {
-            Log.d("MainActivity", "Item found in nav drawer");
             mNVDrawer.getMenu().findItem(id).setChecked(true);
         }
     }
@@ -377,7 +377,14 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     }
 
     @Override
-    public void onLyricFetch(String imageUrl, String artist, String title) {
+    public void onLyricFetchComplete(Lyric lyric) {
+        String title = lyric.getResult().getTitle();
+        String artist = lyric.getResult().getArtist();
+        String imageUrl = lyric.getResult().getCoverArtImageUrl();
+        fillToolbarItems(imageUrl, artist, title);
+    }
+
+    private void fillToolbarItems(String imageUrl, String artist, String title) {
         musicTitleTextView.setText(title);
         artistTextView.setText(artist);
         Picasso.get().load(imageUrl).into(coverArtImageView);

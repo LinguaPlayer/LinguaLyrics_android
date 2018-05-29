@@ -15,5 +15,9 @@ public class Constants {
 
     // Bundle keys
     public static final String KEY_CURRENT_FRAGMENT_ID = "current_fragment_id";
+    public static String SEARCH_QUERY_URL_EXTRA = "query";
+    public static int LYRIC_LOADER_ID = 0;
+
+
 
 }

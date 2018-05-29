@@ -4,17 +4,28 @@ package habibkazemi.ir.lingualyrics_android.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class Lyric {
 
     @SerializedName("title")
     @Expose
-    private String title;
+    String title;
     @SerializedName("result")
     @Expose
-    private Result result;
+    Result result;
     @SerializedName("artist")
     @Expose
-    private String artist;
+    String artist;
+
+    public Lyric clone() {
+        Lyric cloneLyric = new Lyric();
+        cloneLyric.title = title;
+        cloneLyric.result = result;
+        cloneLyric.artist = artist;
+        return cloneLyric;
+    }
 
     public String getTitle() {
         return title;

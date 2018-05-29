@@ -4,23 +4,26 @@ package habibkazemi.ir.lingualyrics_android.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class Result {
 
     @SerializedName("title")
     @Expose
-    private String title;
+    String title;
     @SerializedName("lyric_text")
     @Expose
-    private String lyricText;
+    String lyricText;
     @SerializedName("artist")
     @Expose
-    private String artist;
+    String artist;
     @SerializedName("album")
     @Expose
-    private String album;
+    String album;
     @SerializedName("cover_art_image_url")
     @Expose
-    private String coverArtImageUrl;
+    String coverArtImageUrl;
 
     public String getTitle() {
         return title;
