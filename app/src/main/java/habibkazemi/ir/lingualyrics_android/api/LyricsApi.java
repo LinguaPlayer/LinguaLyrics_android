@@ -1,4 +1,4 @@
-package habibkazemi.ir.lingualyrics_android.remote;
+package habibkazemi.ir.lingualyrics_android.api;
 
 import android.content.Context;
 

@@ -47,11 +47,21 @@ dependencies {
     implementation "com.squareup.picasso:picasso:$rootProject.picasso"
 
     // parceler
-    compile "org.parceler:parceler-api:$rootProject.parceler"
+    implementation "org.parceler:parceler-api:$rootProject.parceler"
     annotationProcessor "org.parceler:parceler:$rootProject.parceler"
 
-    //Test dependencies
+    // Test dependencies
     testImplementation "junit:junit:$rootProject.jUnitVersion"
     androidTestImplementation "com.android.support.test:runner:$rootProject.testVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoCoreVersion"
+
+    // Room
+    implementation "android.arch.persistence.room:runtime:$rootProject.room_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$rootProject.room_version"
+    testImplementation "android.arch.persistence.room:testing:$rootProject.room_version"
+
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:$rootProject.lifecycle_version"
+
+
 }

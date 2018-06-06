@@ -21,7 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,12 +32,12 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import habibkazemi.ir.lingualyrics_android.fragments.AboutFragment;
-import habibkazemi.ir.lingualyrics_android.fragments.LyricsFragment;
-import habibkazemi.ir.lingualyrics_android.fragments.RecentTracksFragment;
-import habibkazemi.ir.lingualyrics_android.fragments.SavedLyricsFragment;
-import habibkazemi.ir.lingualyrics_android.fragments.SettingsFragment;
-import habibkazemi.ir.lingualyrics_android.model.Lyric;
+import habibkazemi.ir.lingualyrics_android.ui.about.AboutFragment;
+import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricsFragment;
+import habibkazemi.ir.lingualyrics_android.ui.recenttracks.RecentTracksFragment;
+import habibkazemi.ir.lingualyrics_android.ui.savedlyrics.SavedLyricsFragment;
+import habibkazemi.ir.lingualyrics_android.ui.settings.SettingsFragment;
+import habibkazemi.ir.lingualyrics_android.vo.Lyric;
 import habibkazemi.ir.lingualyrics_android.util.Constants;
 
 public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener, View.OnTouchListener, LyricsFragment.OnLyricListener{
@@ -378,10 +377,12 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
     @Override
     public void onLyricFetchComplete(Lyric lyric) {
-        String title = lyric.getResult().getTitle();
-        String artist = lyric.getResult().getArtist();
-        String imageUrl = lyric.getResult().getCoverArtImageUrl();
-        fillToolbarItems(imageUrl, artist, title);
+        if (lyric != null) {
+            String title = lyric.getResult().getTitle();
+            String artist = lyric.getResult().getArtist();
+            String imageUrl = lyric.getResult().getCoverArtImageUrl();
+            fillToolbarItems(imageUrl, artist, title);
+        }
     }
 
     private void fillToolbarItems(String imageUrl, String artist, String title) {

@@ -4,7 +4,7 @@
     android:id="@+id/lyrics_fragment_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="habibkazemi.ir.lingualyrics_android.fragments.LyricsFragment">
+    tools:context="habibkazemi.ir.lingualyrics_android.ui.lyric.LyricsFragment">
 
     <TextView
         android:id="@+id/lyric_text"

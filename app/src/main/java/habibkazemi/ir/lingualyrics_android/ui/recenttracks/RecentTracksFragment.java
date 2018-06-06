@@ -1,4 +1,4 @@
-package habibkazemi.ir.lingualyrics_android.fragments;
+package habibkazemi.ir.lingualyrics_android.ui.recenttracks;
 
 
 import android.os.Bundle;

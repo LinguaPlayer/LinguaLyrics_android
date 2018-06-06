@@ -1,5 +1,5 @@
 
-package habibkazemi.ir.lingualyrics_android.model;
+package habibkazemi.ir.lingualyrics_android.vo;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

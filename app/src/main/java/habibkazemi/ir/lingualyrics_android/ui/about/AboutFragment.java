@@ -1,4 +1,4 @@
-package habibkazemi.ir.lingualyrics_android.fragments;
+package habibkazemi.ir.lingualyrics_android.ui.about;
 
 
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import habibkazemi.ir.lingualyrics_android.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SavedLyricsFragment extends Fragment {
+public class AboutFragment extends Fragment {
 
 
-    public SavedLyricsFragment() {
+    public AboutFragment() {
         // Required empty public constructor
     }
 
@@ -24,7 +24,7 @@ public class SavedLyricsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_saved_lyrics, container, false);
+        return inflater.inflate(R.layout.fragment_about, container, false);
     }
 
 }
