@@ -24,10 +24,9 @@ import butterknife.Unbinder;
 import habibkazemi.ir.lingualyrics_android.R;
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;
 import habibkazemi.ir.lingualyrics_android.vo.LyricQuery;
+import habibkazemi.ir.lingualyrics_android.vo.Resource;
+import habibkazemi.ir.lingualyrics_android.vo.Status;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class LyricsFragment extends Fragment implements MaterialSearchView.OnQueryTextListener{
 
     private LyricViewModel mLyricViewModel;
@@ -54,28 +53,42 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
         super.onActivityCreated(savedInstanceState);
         mLyricViewModel = ViewModelProviders.of(this).get(LyricViewModel.class);
 
-        mLyricViewModel.getLyric().observe(this, new Observer<Lyric>() {
-            @Override
-            public void onChanged(@Nullable Lyric lyric) {
-                if (lyric == null)
-                    Log.d("Lyric", "lyric is currently null");
-                if (lyric != null) {
-                    Log.d("Lyric", lyric.getResult().getLyricText());
-                    Log.d("Lyric", "id" + lyric.getId() + "");
-                }
-                ((OnLyricListener) getActivity()).onLyricFetchComplete(lyric);
-                onLyricDownload(lyric);
-            }
-        });
 
-        // TODO: Find a way to merge this with above
-        mLyricViewModel.getLastLyric().observe(this, new Observer<Lyric>() {
+        mLyricViewModel.getLyric().observe(this, new Observer<Resource<Lyric>>() {
             @Override
-            public void onChanged(@Nullable Lyric lyric) {
-                ((OnLyricListener) getActivity()).onLyricFetchComplete(lyric);
-                onLyricDownload(lyric);
+            public void onChanged(@Nullable Resource<Lyric> lyricResource) {
+                switch (lyricResource.status) {
+                    case LOADING:
+                        showSpinner();
+                        break;
+                    case SUCCESS:
+                        loadingLyricSucceed(lyricResource);
+                        break;
+                    case ERROR:
+                        loadingLyricFailed(lyricResource);
+                        break;
+                }
             }
         });
+    }
+
+    public void loadingLyricFailed(Resource<Lyric> lyricResource) {
+        hideSpinner();
+        // TODO: Show artwork and icons instead of text
+        lyricTexView.setText(lyricResource.message);
+    }
+
+    public void loadingLyricSucceed(Resource<Lyric> lyricResource) {
+        hideSpinner();
+        ((OnLyricListener) getActivity()).onLyricFetchComplete(lyricResource.data);
+
+        if (lyricResource != null) {
+            mLyricViewModel.setLastLyric(lyricResource.data);
+            String lyricText = lyricResource.data.getResult().getLyricText();
+            lyricTexView.setText(lyricText);
+        } else {
+            lyricTexView.setText(getResources().getText(R.string.lyric_not_found));
+        }
     }
 
     @Override
@@ -142,7 +155,7 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
         LyricQuery lyricQuery = new LyricQuery(query, "");
         mLyricViewModel.setLyricQuery(lyricQuery);
         lyricTexView.setText("");
-        showSpinner();
+//        showSpinner();
         return false;
     }
 
@@ -152,16 +165,6 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
     }
 
     public void onLyricDownload(Lyric lyric) {
-       hideSpinner();
-       // TODO: Handle errors in proper way and show proper icon and text for NOT FOUND, NETWORK ERROR , ...
-
-       String lyricText = "Lyric not found or Some error happened";
-
-       if (lyric != null) {
-           mLyricViewModel.setLastLyric(lyric);
-           lyricText = lyric.getResult().getLyricText();
-       }
-       lyricTexView.setText(lyricText);
     }
 
     public interface OnLyricListener {
