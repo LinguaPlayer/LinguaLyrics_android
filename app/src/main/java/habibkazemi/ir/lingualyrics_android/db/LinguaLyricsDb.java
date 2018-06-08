@@ -12,13 +12,14 @@ import com.google.gson.Gson;
 
 import habibkazemi.ir.lingualyrics_android.api.ConnectivityInterceptor;
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;
+import habibkazemi.ir.lingualyrics_android.vo.LyricLink;
 
 /**
  * Created by habibkazemi on 5/29/18
  */
 
 @Database(
-        entities = {Lyric.class},
+        entities = {Lyric.class, LyricLink.class},
         version = 1,
         exportSchema = false
 )

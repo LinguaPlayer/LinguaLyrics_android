@@ -378,9 +378,9 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     @Override
     public void onLyricFetchComplete(Lyric lyric) {
         if (lyric != null) {
-            String title = lyric.getResult().getTitle();
-            String artist = lyric.getResult().getArtist();
-            String imageUrl = lyric.getResult().getCoverArtImageUrl();
+            String title = lyric.getTitle();
+            String artist = lyric.getArtist();
+            String imageUrl = lyric.getCoverArtImageUrl();
             fillToolbarItems(imageUrl, artist, title);
         }
     }
