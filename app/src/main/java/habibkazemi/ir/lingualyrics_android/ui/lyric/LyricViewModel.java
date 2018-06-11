@@ -9,6 +9,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.List;
 import habibkazemi.ir.lingualyrics_android.repository.LyricRepository;

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/nav_lyrics">
+
+    <fragment
+        android:id="@+id/nav_lyrics"
+        android:name="habibkazemi.ir.lingualyrics_android.ui.lyric.LyricsFragment"
+        android:label="fragment_lyrics"
+        tools:layout="@layout/fragment_lyrics" />
+    <fragment
+        android:id="@+id/nav_recent_tracks"
+        android:name="habibkazemi.ir.lingualyrics_android.ui.recenttracks.RecentTracksFragment"
+        android:label="fragment_recent_tracks"
+        tools:layout="@layout/fragment_recent_tracks" />
+    <fragment
+        android:id="@+id/nav_About"
+        android:name="habibkazemi.ir.lingualyrics_android.ui.about.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="habibkazemi.ir.lingualyrics_android.ui.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/nav_saved_lyrics"
+        android:name="habibkazemi.ir.lingualyrics_android.ui.savedlyrics.SavedLyricsFragment"
+        android:label="fragment_saved_lyrics"
+        tools:layout="@layout/fragment_saved_lyrics" />
+</navigation>

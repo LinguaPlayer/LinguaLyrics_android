@@ -8,14 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.wang.avi.AVLoadingIndicatorView;
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,11 +20,10 @@ import habibkazemi.ir.lingualyrics_android.R;
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;
 import habibkazemi.ir.lingualyrics_android.vo.Resource;
 
-public class LyricsFragment extends Fragment implements MaterialSearchView.OnQueryTextListener{
+public class LyricsFragment extends Fragment{
 
     private LyricViewModel mLyricViewModel;
     private Unbinder unbinder;
-    MaterialSearchView mSearchView;
 
     @BindView(R.id.lyric_text)
     public TextView lyricTexView;
@@ -48,9 +43,9 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mLyricViewModel = ViewModelProviders.of(this).get(LyricViewModel.class);
+        mLyricViewModel = ViewModelProviders.of(getActivity()).get(LyricViewModel.class);
 
-        mLyricViewModel.getLyricQueryInDatabaseLiveData().observe(this, listResource -> {
+        mLyricViewModel.getLyricQueryInDatabaseLiveData().observe(getActivity(), listResource -> {
             Log.d("Lyric" , listResource.data + "");
             if (listResource.message != null)
                 Log.d("Lyric", listResource.message);
@@ -58,7 +53,7 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
                 Log.d("Lyric", listResource.status + " ");
         });
 
-        mLyricViewModel.getLyric().observe(this, lyricResource -> {
+        mLyricViewModel.getLyric().observe(getActivity(), lyricResource -> {
             switch (lyricResource.status) {
                 case LOADING:
                     showSpinner();
@@ -71,6 +66,12 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
                     break;
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.search).setVisible(true);
     }
 
     public void loadingLyricFailed(Resource<Lyric> lyricResource) {
@@ -110,15 +111,6 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
         super.onResume();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        inflater.inflate(R.menu.lyrics_view_options_menu, menu);
-        mSearchView = getActivity().findViewById(R.id.search_view);
-        mSearchView.setOnQueryTextListener(this);
-    }
-
     private void showSpinner() {
         loadingIndicator.setVisibility(View.VISIBLE);
     }
@@ -131,37 +123,6 @@ public class LyricsFragment extends Fragment implements MaterialSearchView.OnQue
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.search:
-                mSearchView.showSearch();
-                return false;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public boolean isSearchViewOpen() {
-         return mSearchView.isSearchOpen();
-    }
-
-    public void closeSearchView() {
-        mSearchView.closeSearch();
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        mLyricViewModel.setLyricQuery(query);
-        lyricTexView.setText("");
-//        showSpinner();
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
     }
 
     public interface OnLyricListener {

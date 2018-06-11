@@ -1,17 +1,15 @@
 package habibkazemi.ir.lingualyrics_android;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,6 +19,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,19 +28,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.squareup.picasso.Picasso;
 
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import habibkazemi.ir.lingualyrics_android.ui.about.AboutFragment;
+import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricViewModel;
 import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricsFragment;
-import habibkazemi.ir.lingualyrics_android.ui.recenttracks.RecentTracksFragment;
-import habibkazemi.ir.lingualyrics_android.ui.savedlyrics.SavedLyricsFragment;
-import habibkazemi.ir.lingualyrics_android.ui.settings.SettingsFragment;
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;
 import habibkazemi.ir.lingualyrics_android.util.Constants;
 
-public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener, View.OnTouchListener, LyricsFragment.OnLyricListener{
+public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener, View.OnTouchListener, LyricsFragment.OnLyricListener, MaterialSearchView.OnQueryTextListener{
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
@@ -73,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     private int mCurrentFragmentID;
     private Fragment mCurrentFragment;
 
+    MaterialSearchView mSearchView;
+    private LyricViewModel mLyricViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,8 +90,20 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
             mCurrentFragmentID = R.id.nav_lyrics;
         else
             mCurrentFragmentID = savedInstanceState.getInt(Constants.KEY_CURRENT_FRAGMENT_ID, R.id.nav_lyrics);
+
 //        I don't think it's a good idea to use colorPalette generator here
 //        generateColorPalette();
+
+        mLyricViewModel = ViewModelProviders.of(this).get(LyricViewModel.class);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.lyrics_view_options_menu, menu);
+        mSearchView = findViewById(R.id.search_view);
+        mSearchView.setOnQueryTextListener(this);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -96,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         mAppBarLayout.addOnOffsetChangedListener(this);
         mNestedScrollView.setOnTouchListener(this);
         mCoordinatorLayout.setOnTouchListener(this);
-
     }
 
     @Override
@@ -113,8 +128,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
     private void generateColorPalette(/* get bitmpa? , or path?*/) {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ocean);
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            @Override
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() { @Override
             public void onGenerated(Palette palette) {
                 int mutedColor;
                 mutedColor = palette.getMutedColor(R.color.colorPrimary);
@@ -124,7 +138,13 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     }
 
     private void prepareNavDrawer() {
-        setupDrawerContent(mNVDrawer);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host);
+        NavigationUI.setupWithNavController(mNVDrawer, navController);
+        navController.addOnNavigatedListener((controller, destination) -> {
+            mCurrentFragmentID =  destination.getId();
+            prepareAppBarForSelectedItem(mCurrentFragmentID);
+            mCollapsingToolbarLayout.setTitle(getTitle(mCurrentFragmentID));
+        });
         mDrawerToggle = setupDrawerToggle();
         mDrawer.addDrawerListener(mDrawerToggle);
     }
@@ -146,20 +166,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    private void setupDrawerContent(NavigationView nvView) {
-        // show default fragment in creation
-        showFragment(mCurrentFragmentID);
-        nvView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        selectDrawerItem(item);
-                        return true;
-                    }
-                }
-        );
     }
 
     private void collapseAppBar() {
@@ -212,18 +218,10 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
     @Override
     public void onBackPressed() {
-        boolean wasOpen = false;
-        if (mCurrentFragmentID == R.id.nav_lyrics)
-            wasOpen = ((LyricsFragment) mCurrentFragment).isSearchViewOpen();
-        if (wasOpen)
-            ((LyricsFragment) mCurrentFragment).closeSearchView();
+        if (isSearchViewOpen())
+            closeSearchView();
         else
             super.onBackPressed();
-    }
-
-    public void selectDrawerItem(MenuItem menuItem) {
-        int id = menuItem.getItemId();
-        showFragment(id);
     }
 
     public void prepareAppBarForSelectedItem(int id) {
@@ -250,21 +248,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         }
     }
 
-    private String getTag(int id) {
-        switch (id) {
-            case R.id.nav_recent_tracks:
-                return Constants.ID_RECENT_TRACKS;
-            case R.id.nav_saved_lyrics:
-                return Constants.ID_SAVED_LYRICS;
-            case R.id.nav_settings:
-                return Constants.ID_SETTINGS;
-            case R.id.nav_About:
-                return Constants.ID_ABOUT;
-            default:
-                return Constants.ID_LYRICS;
-        }
-    }
-
     private String getTitle(int id) {
         switch (id) {
             case R.id.nav_recent_tracks:
@@ -280,52 +263,9 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         }
     }
 
-    private Fragment getNewFragment(int id) {
-        switch (id) {
-            case R.id.nav_recent_tracks:
-                return new RecentTracksFragment();
-            case R.id.nav_saved_lyrics:
-                return new SavedLyricsFragment();
-            case R.id.nav_settings:
-                return new SettingsFragment();
-            case R.id.nav_About:
-                return new AboutFragment();
-            default:
-                return new LyricsFragment();
-        }
-    }
-
-    private void showFragment(int id) {
-        String tag = getTag(id);
-        Fragment fragment = getNewFragment(id);
-        showFragment(fragment, id, tag);
-    }
-
-    private void showFragment(Fragment fragment, int id, String tag) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-
-        ft.replace(R.id.flContent, fragment, tag)
-          .commit();
-
-        prepareAppBarForSelectedItem(id);
-        updateCheckedItem(id);
-        mCurrentFragmentID = id;
-        mCurrentFragment = fragment;
-        setTitle(getTitle(id));
-        closeDrawers();
-    }
-
     public void closeDrawers() {
         mDrawer.closeDrawers();
     }
-
-    private void updateCheckedItem(int id) {
-        if (mNVDrawer.getMenu().findItem(id) != null) {
-            mNVDrawer.getMenu().findItem(id).setChecked(true);
-        }
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -338,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                 break;
             case R.id.search:
                 expandAppBar();
+                mSearchView.showSearch();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -362,14 +303,31 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         }
     }
 
+    public boolean isSearchViewOpen() {
+        return mSearchView.isSearchOpen();
+    }
+
+    public void closeSearchView() {
+        mSearchView.closeSearch();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        mLyricViewModel.setLyricQuery(query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (v.getId()) {
             case R.id.coordinator_layout:
             case R.id.nestedScrollView:
-                if (mCurrentFragmentID == R.id.nav_lyrics)
-                    if (((LyricsFragment) mCurrentFragment).isSearchViewOpen())
-                        ((LyricsFragment) mCurrentFragment).closeSearchView();
+                if (isSearchViewOpen())
+                    closeSearchView();
                 break;
         }
         return false;

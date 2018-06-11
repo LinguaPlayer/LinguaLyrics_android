@@ -67,5 +67,10 @@ dependencies {
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$rootProject.lifecycle_version"
 
+    // Navigation
+    implementation "android.arch.navigation:navigation-fragment:$rootProject.nav_version"
+    implementation "android.arch.navigation:navigation-ui:$rootProject.nav_version"
+
+
 
 }
