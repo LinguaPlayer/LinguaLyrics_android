@@ -32,6 +32,7 @@ dependencies {
     implementation "com.android.support:support-vector-drawable:$rootProject.supportLibraryVersion"
     implementation "com.android.support:palette-v7:$rootProject.supportLibraryVersion"
     implementation "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
+    implementation 'com.android.support:support-v4:26.1.0'
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeCompilerVersion"
 
     // material search view
@@ -70,7 +71,5 @@ dependencies {
     // Navigation
     implementation "android.arch.navigation:navigation-fragment:$rootProject.nav_version"
     implementation "android.arch.navigation:navigation-ui:$rootProject.nav_version"
-
-
 
 }

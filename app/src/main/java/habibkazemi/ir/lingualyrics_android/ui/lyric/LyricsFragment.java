@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,11 +14,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import habibkazemi.ir.lingualyrics_android.R;
+import habibkazemi.ir.lingualyrics_android.ui.lyriclist.LyricRecyclerAdapter;
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;
+import habibkazemi.ir.lingualyrics_android.vo.LyricLink;
 import habibkazemi.ir.lingualyrics_android.vo.Resource;
 
 public class LyricsFragment extends Fragment{
@@ -43,29 +48,6 @@ public class LyricsFragment extends Fragment{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mLyricViewModel = ViewModelProviders.of(getActivity()).get(LyricViewModel.class);
-
-        mLyricViewModel.getLyricQueryInDatabaseLiveData().observe(getActivity(), listResource -> {
-            Log.d("Lyric" , listResource.data + "");
-            if (listResource.message != null)
-                Log.d("Lyric", listResource.message);
-            if (listResource.status != null)
-                Log.d("Lyric", listResource.status + " ");
-        });
-
-        mLyricViewModel.getLyric().observe(getActivity(), lyricResource -> {
-            switch (lyricResource.status) {
-                case LOADING:
-                    showSpinner();
-                    break;
-                case SUCCESS:
-                    loadingLyricSucceed(lyricResource);
-                    break;
-                case ERROR:
-                    loadingLyricFailed(lyricResource);
-                    break;
-            }
-        });
     }
 
     @Override
@@ -104,6 +86,30 @@ public class LyricsFragment extends Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
+
+        mLyricViewModel = ViewModelProviders.of(getActivity()).get(LyricViewModel.class);
+
+//        mLyricViewModel.getLyricQueryInDatabaseLiveData().observe(getActivity(), listResource -> {
+//            Log.d("Lyric" , listResource.data + "");
+//            if (listResource.message != null)
+//                Log.d("Lyric", listResource.message);
+//            if (listResource.status != null)
+//                Log.d("Lyric", listResource.status + " ");
+//        });
+
+        mLyricViewModel.getLyric().observe(this, lyricResource -> {
+            switch (lyricResource.status) {
+                case LOADING:
+                    showSpinner();
+                    break;
+                case SUCCESS:
+                    loadingLyricSucceed(lyricResource);
+                    break;
+                case ERROR:
+                    loadingLyricFailed(lyricResource);
+                    break;
+            }
+        });
     }
 
     @Override
@@ -112,17 +118,25 @@ public class LyricsFragment extends Fragment{
     }
 
     private void showSpinner() {
-        loadingIndicator.setVisibility(View.VISIBLE);
+//        loadingIndicator.setVisibility(View.VISIBLE);
     }
 
     private void hideSpinner() {
-        loadingIndicator.setVisibility(View.INVISIBLE);
+//        loadingIndicator.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        Log.d("Lyric", "LyricsFragments: onDestroyView");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("Lyric", "LyricsFragments: onDestroy");
+
     }
 
     public interface OnLyricListener {

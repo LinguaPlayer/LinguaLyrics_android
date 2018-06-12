@@ -32,6 +32,7 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.squareup.picasso.Picasso;
 
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import butterknife.BindView;
@@ -313,6 +314,9 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host);
+        navController.navigate(R.id.lyricListFragment);
+
         mLyricViewModel.setLyricQuery(query);
         return false;
     }

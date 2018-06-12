@@ -8,7 +8,7 @@
         android:id="@+id/nav_lyrics"
         android:name="habibkazemi.ir.lingualyrics_android.ui.lyric.LyricsFragment"
         android:label="fragment_lyrics"
-        tools:layout="@layout/fragment_lyrics" />
+        tools:layout="@layout/fragment_lyrics" ></fragment>
     <fragment
         android:id="@+id/nav_recent_tracks"
         android:name="habibkazemi.ir.lingualyrics_android.ui.recenttracks.RecentTracksFragment"
@@ -18,15 +18,20 @@
         android:id="@+id/nav_About"
         android:name="habibkazemi.ir.lingualyrics_android.ui.about.AboutFragment"
         android:label="fragment_about"
-        tools:layout="@layout/fragment_about" />
+        tools:layout="@layout/fragment_about" ></fragment>
     <fragment
         android:id="@+id/nav_settings"
         android:name="habibkazemi.ir.lingualyrics_android.ui.settings.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" ></fragment>
     <fragment
         android:id="@+id/nav_saved_lyrics"
         android:name="habibkazemi.ir.lingualyrics_android.ui.savedlyrics.SavedLyricsFragment"
         android:label="fragment_saved_lyrics"
         tools:layout="@layout/fragment_saved_lyrics" />
+    <fragment
+        android:id="@+id/lyricListFragment"
+        android:name="habibkazemi.ir.lingualyrics_android.ui.lyriclist.LyricListFragment"
+        android:label="fragment_lyric_list"
+        tools:layout="@layout/fragment_lyric_list" />
 </navigation>
