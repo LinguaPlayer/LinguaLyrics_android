@@ -98,12 +98,26 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         mLyricViewModel = ViewModelProviders.of(this).get(LyricViewModel.class);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.lyrics_view_options_menu, menu);
         mSearchView = findViewById(R.id.search_view);
         mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                // Hack: the collapsing toolbar title is shown on top of searchView
+                // to fix that i make it transparent and reverse it when closed
+                mCollapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.transparent_white));
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                mCollapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -243,6 +257,10 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                 collapseAppBar();
                 lockAppBar();
                 break;
+            case R.id.lyricListFragment:
+                collapseAppBar();
+                lockAppBar();
+                break;
             default:
                 unLockAppBar();
                 break;
@@ -278,7 +296,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                 mDrawer.openDrawer(GravityCompat.START);
                 break;
             case R.id.search:
-                expandAppBar();
                 mSearchView.showSearch();
                 break;
         }

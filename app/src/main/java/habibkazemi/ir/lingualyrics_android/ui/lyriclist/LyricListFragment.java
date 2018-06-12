@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -55,6 +56,10 @@ public class LyricListFragment extends Fragment implements LyricRecyclerAdapter.
         super.onViewCreated(view, savedInstanceState);
 
         unbinder = ButterKnife.bind(this, view);
+
+        /* Disable the nestedScrolling to disable expanding the
+           appBar with dragging the mNestedScrollView below it */
+        ViewCompat.setNestedScrollingEnabled(mLyricListRecyclerView, false);
 
         LyricRecyclerAdapter lyricRecyclerAdapter = new LyricRecyclerAdapter(new ArrayList<>());
         lyricRecyclerAdapter.setOnItemClickListener(this);
