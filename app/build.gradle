@@ -72,4 +72,8 @@ dependencies {
     implementation "android.arch.navigation:navigation-fragment:$rootProject.nav_version"
     implementation "android.arch.navigation:navigation-ui:$rootProject.nav_version"
 
+    // Paging
+    implementation "android.arch.paging:runtime:$rootProject.paging_version"
+
+
 }

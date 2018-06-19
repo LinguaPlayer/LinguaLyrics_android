@@ -1,5 +1,7 @@
 package habibkazemi.ir.lingualyrics_android.api;
 
+import android.arch.paging.PagedList;
+
 import java.util.List;
 
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;

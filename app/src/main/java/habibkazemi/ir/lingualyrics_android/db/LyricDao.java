@@ -24,7 +24,7 @@ public interface LyricDao {
 
     // Description has both artist and title data inside
     @Query("SELECT * FROM LyricLink where userQuery LIKE \'%\' || :query ||  \'%\' OR  description LIKE \'%\' || :query ||  \'%\' ")
-    LiveData <List<LyricLink>> getLyricList(String query);
+    android.arch.paging.DataSource.Factory<Integer, LyricLink> getLyricList(String query);
 
     @Query("SELECT * FROM Lyric where id = :id")
     LiveData<Lyric> getLyricById(int id);

@@ -1,27 +1,39 @@
 package habibkazemi.ir.lingualyrics_android.ui.lyriclist;
 
+import android.arch.paging.PagedListAdapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.List;
 
 import habibkazemi.ir.lingualyrics_android.R;
 import habibkazemi.ir.lingualyrics_android.vo.LyricLink;
 
-public class LyricRecyclerAdapter extends RecyclerView.Adapter<LyricRecyclerAdapter.ViewHolder> {
+public class LyricRecyclerAdapter extends PagedListAdapter<LyricLink, LyricRecyclerAdapter.ViewHolder> {
 
-    List<LyricLink> mLyriclinks;
     OnItemClickListener listener;
 
-    public LyricRecyclerAdapter(List<LyricLink> lyricLinks) {
-        this.mLyriclinks = lyricLinks;
+    public LyricRecyclerAdapter() {
+        super(DIFF_CALLBACK);
     }
+
+    public static final DiffUtil.ItemCallback<LyricLink> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<LyricLink>() {
+                @Override
+                public boolean areItemsTheSame(LyricLink oldItem, LyricLink newItem) {
+                    return oldItem.getId() == newItem.getId();
+                }
+
+                @Override
+                public boolean areContentsTheSame(LyricLink oldItem, LyricLink newItem) {
+                    return (oldItem.getUrl().equals(newItem.getUrl()) && oldItem.getDescription().equals(newItem.getDescription()));
+                }
+            };
+
 
     @NonNull
     @Override
@@ -39,23 +51,13 @@ public class LyricRecyclerAdapter extends RecyclerView.Adapter<LyricRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        LyricLink lyricLink = mLyriclinks.get(position);
-        holder.setLyricDescription(lyricLink);
+        LyricLink lyricLink = getItem(position);
+        holder.bind(lyricLink);
     }
-
-    public void setData(List<LyricLink> lyricLinks) {
-        this.mLyriclinks = lyricLinks;
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public int getItemCount() {
-        return mLyriclinks.size();
-    }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView lyric_description;
+        private LyricLink lyricLink;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -63,17 +65,14 @@ public class LyricRecyclerAdapter extends RecyclerView.Adapter<LyricRecyclerAdap
             itemView.setOnClickListener(this);
         }
 
-        public void setLyricDescription(LyricLink lyric_description) {
-            this.lyric_description.setText(lyric_description.getDescription());
+        public void bind(LyricLink lyricLink) {
+            this.lyricLink = lyricLink;
+            this.lyric_description.setText(lyricLink.getDescription());
         }
 
         @Override
         public void onClick(View v) {
-            int position = getAdapterPosition();
-            LyricLink lyricLink = mLyriclinks.get(position);
             listener.onItemClick(lyricLink);
-            Toast.makeText(v.getContext(), lyricLink.getUrl(), Toast.LENGTH_LONG).show();
-
         }
     }
 

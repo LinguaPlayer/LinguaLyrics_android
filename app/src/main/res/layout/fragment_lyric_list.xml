@@ -7,15 +7,25 @@
     android:layout_height="match_parent"
     tools:context=".ui.lyriclist.LyricListFragment">
 
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/progress_loader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        app:indicatorColor="?attr/colorAccent"
+        app:indicatorName="BallPulseIndicator"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/lyric_list_recyclerview"
+        app:layout_constraintStart_toStartOf="@+id/lyric_list_recyclerview" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/lyric_list_recyclerview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/progress_loader"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

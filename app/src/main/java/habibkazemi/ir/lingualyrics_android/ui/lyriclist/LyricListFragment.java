@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wang.avi.AVLoadingIndicatorView;
+
 import java.util.ArrayList;
 
 import androidx.navigation.NavController;
@@ -22,6 +24,7 @@ import butterknife.Unbinder;
 import habibkazemi.ir.lingualyrics_android.R;
 import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricViewModel;
 import habibkazemi.ir.lingualyrics_android.vo.LyricLink;
+import habibkazemi.ir.lingualyrics_android.vo.Status;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +34,9 @@ public class LyricListFragment extends Fragment implements LyricRecyclerAdapter.
 
     @BindView(R.id.lyric_list_recyclerview)
     public RecyclerView mLyricListRecyclerView;
+
+    @BindView(R.id.progress_loader)
+    public AVLoadingIndicatorView loadingIndicator;
 
     private Unbinder unbinder;
     private LyricViewModel mLyricViewModel;
@@ -61,7 +67,7 @@ public class LyricListFragment extends Fragment implements LyricRecyclerAdapter.
            appBar with dragging the mNestedScrollView below it */
         ViewCompat.setNestedScrollingEnabled(mLyricListRecyclerView, false);
 
-        LyricRecyclerAdapter lyricRecyclerAdapter = new LyricRecyclerAdapter(new ArrayList<>());
+        LyricRecyclerAdapter lyricRecyclerAdapter = new LyricRecyclerAdapter();
         lyricRecyclerAdapter.setOnItemClickListener(this);
         mLyricListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mLyricListRecyclerView.setAdapter(lyricRecyclerAdapter);
@@ -69,8 +75,20 @@ public class LyricListFragment extends Fragment implements LyricRecyclerAdapter.
         mLyricViewModel = ViewModelProviders.of(getActivity()).get(LyricViewModel.class);
 
         mLyricViewModel.getLyricQueryInDatabaseLiveData().observe(this, listResource -> {
+            if (listResource.status == Status.LOADING) {
+                showSpinner();
+            }
+
+            if (listResource.status == Status.SUCCESS) {
+                hideSpinner();
+            }
+
+            if (listResource.status == Status.ERROR) {
+                hideSpinner();
+            }
+
             if (listResource.data != null) {
-                lyricRecyclerAdapter.setData(listResource.data);
+                lyricRecyclerAdapter.submitList(listResource.data);
             }
         });
     }
@@ -87,5 +105,14 @@ public class LyricListFragment extends Fragment implements LyricRecyclerAdapter.
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host);
         navController.navigate(R.id.nav_lyrics);
         mLyricViewModel.queryLyricByUrl(lyricLink.getUrl());
+    }
+
+
+    private void showSpinner() {
+        loadingIndicator.setVisibility(View.VISIBLE);
+    }
+
+    private void hideSpinner() {
+        loadingIndicator.setVisibility(View.INVISIBLE);
     }
 }

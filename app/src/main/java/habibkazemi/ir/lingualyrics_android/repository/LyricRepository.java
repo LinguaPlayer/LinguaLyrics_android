@@ -2,8 +2,12 @@ package habibkazemi.ir.lingualyrics_android.repository;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.arch.paging.DataSource;
+import android.arch.paging.LivePagedListBuilder;
+import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.List;
 
@@ -22,6 +26,8 @@ public class LyricRepository {
     LiveData<Lyric> mLyric;
     LyricsService mLyricsService;
 
+    private static final int DATABASE_PAGE_SIZE = 20;
+
 
     public LyricRepository(Application application) {
         LinguaLyricsDb linguaLyricsDb = LinguaLyricsDb.getDatabase(application.getApplicationContext());
@@ -33,6 +39,8 @@ public class LyricRepository {
         return new NetworkBoundResource<Lyric, Lyric>() {
             @Override
             protected void saveCallResult(@NonNull Lyric item) {
+                if (item == null)
+                    Log.d("Lyric", "Yeah item is null");
                 mLyricDao.insert(item);
             }
 
@@ -57,23 +65,26 @@ public class LyricRepository {
         }.getAsLiveData();
     }
 
-    public LiveData <Resource<List<LyricLink>>> loadLyricUrls(String query) {
-        return new NetworkBoundResource < List<LyricLink> , List<LyricLink> > () {
+    public LiveData <Resource<PagedList<LyricLink>>> loadLyricUrls(String query) {
+        return new NetworkBoundResource <PagedList<LyricLink> , List<LyricLink> > () {
             @Override
             protected void saveCallResult(@NonNull List<LyricLink> items) {
+                if (items == null)
+                    Log.d("Lyric", "Yeah items is null");
                 mLyricDao.insert(items);
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable List<LyricLink> data) {
+            protected boolean shouldFetch(@Nullable PagedList<LyricLink> data) {
                 // Fetch data from network anyway
                 return true;
             }
 
             @NonNull
             @Override
-            protected LiveData <List<LyricLink>> loadFromDb() {
-                return mLyricDao.getLyricList(query);
+            protected LiveData <PagedList<LyricLink>> loadFromDb() {
+                DataSource.Factory<Integer, LyricLink> dataSourceFactory = mLyricDao.getLyricList(query);
+                return new LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE).build();
             }
 
             @NonNull

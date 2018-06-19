@@ -7,6 +7,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
+import android.arch.paging.PagedList;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -36,10 +37,10 @@ public class LyricViewModel extends AndroidViewModel {
                 }
             });
 
-    private final LiveData<Resource<List<LyricLink>>> mLyricQueryLiveData = Transformations.switchMap(mLyricQueryMutableLiveData,
-            new Function<String, LiveData<Resource<List<LyricLink>>> >() {
+    private final LiveData<Resource<PagedList<LyricLink>>> mLyricQueryLiveData = Transformations.switchMap(mLyricQueryMutableLiveData,
+            new Function<String, LiveData<Resource<PagedList<LyricLink>>> >() {
                 @Override
-                public LiveData <Resource<List<LyricLink>>> apply(String query) {
+                public LiveData <Resource<PagedList<LyricLink>>> apply(String query) {
                     return mRepository.loadLyricUrls(query);
                 }
             });
@@ -85,7 +86,7 @@ public class LyricViewModel extends AndroidViewModel {
         }
     }
 
-    public LiveData<Resource<List<LyricLink>>> getLyricQueryInDatabaseLiveData() {
+    public LiveData<Resource<PagedList<LyricLink>>> getLyricQueryInDatabaseLiveData() {
         return mLyricQueryLiveData;
     }
 }
