@@ -16,7 +16,9 @@ import com.wang.avi.AVLoadingIndicatorView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import habibkazemi.ir.lingualyrics_android.MainActivity;
 import habibkazemi.ir.lingualyrics_android.R;
+import habibkazemi.ir.lingualyrics_android.util.Constants;
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;
 import habibkazemi.ir.lingualyrics_android.vo.Resource;
 
@@ -84,13 +86,6 @@ public class LyricsFragment extends Fragment{
 
         mLyricViewModel = ViewModelProviders.of(getActivity()).get(LyricViewModel.class);
 
-//        mLyricViewModel.getLyricQueryInDatabaseLiveData().observe(getActivity(), listResource -> {
-//            Log.d("Lyric" , listResource.data + "");
-//            if (listResource.message != null)
-//                Log.d("Lyric", listResource.message);
-//            if (listResource.status != null)
-//                Log.d("Lyric", listResource.status + " ");
-//        });
 
         mLyricViewModel.getLyric().observe(this, lyricResource -> {
             switch (lyricResource.status) {
@@ -105,6 +100,17 @@ public class LyricsFragment extends Fragment{
                     break;
             }
         });
+
+        if (getArguments() != null) {
+            Boolean expandAppBar = getArguments().getBoolean(Constants.KEY_EXPAND_APP_BAR);
+            if (expandAppBar != null && expandAppBar) {
+                ((MainActivity) getActivity()).expandAppBar();
+                Log.d("Lyric", "expandAppBar first if");
+            }
+            else {
+                ((MainActivity) getActivity()).prepareAppBarCollapsedExpandedState();
+            }
+        }
     }
 
     @Override

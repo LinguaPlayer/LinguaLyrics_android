@@ -32,7 +32,6 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.squareup.picasso.Picasso;
 
 import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import butterknife.BindView;
@@ -156,9 +155,8 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         NavController navController = Navigation.findNavController(this, R.id.nav_host);
         NavigationUI.setupWithNavController(mNVDrawer, navController);
         navController.addOnNavigatedListener((controller, destination) -> {
-            mCurrentFragmentID =  destination.getId();
-            prepareAppBarForSelectedItem(mCurrentFragmentID);
-            mCollapsingToolbarLayout.setTitle(getTitle(mCurrentFragmentID));
+            prepareAppBarForSelectedItem(destination.getId());
+            mCollapsingToolbarLayout.setTitle(getTitle(destination.getId()));
         });
         mDrawerToggle = setupDrawerToggle();
         mDrawer.addDrawerListener(mDrawerToggle);
@@ -183,12 +181,12 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void collapseAppBar() {
+    public void collapseAppBar() {
         // Collapse the AppBarLayout with animation
         mAppBarLayout.setExpanded(false, true);
     }
 
-    private void expandAppBar() {
+    public void expandAppBar() {
         // Collapse the AppBarLayout with animation
         mAppBarLayout.setExpanded(true, true);
     }
@@ -239,7 +237,17 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
             super.onBackPressed();
     }
 
+    public void prepareAppBarCollapsedExpandedState(){
+        if (!mLyricViewModel.getIsAppBarCollapsed())
+            expandAppBar();
+    }
+
     public void prepareAppBarForSelectedItem(int id) {
+        if( mCurrentFragmentID == R.id.nav_lyrics)
+            mLyricViewModel.setIsAppBarCollapsed(mAppBarLayout.getBottom() < mAppBarLayout.getHeight() * 2/3);
+
+        mCurrentFragmentID =  id;
+
         switch (id) {
             case R.id.nav_recent_tracks:
                 collapseAppBar();

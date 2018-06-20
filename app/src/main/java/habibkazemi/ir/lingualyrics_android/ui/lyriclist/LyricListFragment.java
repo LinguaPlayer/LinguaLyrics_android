@@ -23,6 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import habibkazemi.ir.lingualyrics_android.R;
 import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricViewModel;
+import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricsFragment;
 import habibkazemi.ir.lingualyrics_android.vo.LyricLink;
 import habibkazemi.ir.lingualyrics_android.vo.Status;
 
@@ -40,6 +41,7 @@ public class LyricListFragment extends Fragment implements LyricRecyclerAdapter.
 
     private Unbinder unbinder;
     private LyricViewModel mLyricViewModel;
+
 
     public LyricListFragment() {
         // Required empty public constructor
@@ -102,8 +104,10 @@ public class LyricListFragment extends Fragment implements LyricRecyclerAdapter.
 
     @Override
     public void onItemClick(LyricLink lyricLink) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("expand_app_bar", true);
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host);
-        navController.navigate(R.id.nav_lyrics);
+        navController.navigate(R.id.nav_lyrics, bundle);
         mLyricViewModel.queryLyricByUrl(lyricLink.getUrl());
     }
 

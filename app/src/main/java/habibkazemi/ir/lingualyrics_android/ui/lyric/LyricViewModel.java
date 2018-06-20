@@ -28,6 +28,7 @@ public class LyricViewModel extends AndroidViewModel {
     private final MutableLiveData<String> mLyricQueryMutableLiveData = new MutableLiveData<>();
     private final MediatorLiveData <Resource<Lyric>> mLyricMediatorLiveData = new MediatorLiveData();
     private final LiveData <Lyric> mLastLyricLiveData;
+    private boolean mAppBarWasCollapsed = true;
 
     private final LiveData<Resource<Lyric>> mLyricLiveDataSource = Transformations.switchMap(mLyricQueryByUrlMutableLiveData,
             new Function<String, LiveData<Resource<Lyric>>>() {
@@ -88,5 +89,13 @@ public class LyricViewModel extends AndroidViewModel {
 
     public LiveData<Resource<PagedList<LyricLink>>> getLyricQueryInDatabaseLiveData() {
         return mLyricQueryLiveData;
+    }
+
+    public void setIsAppBarCollapsed(boolean collapsed) {
+        this.mAppBarWasCollapsed = collapsed;
+    }
+
+    public boolean getIsAppBarCollapsed(){
+        return this.mAppBarWasCollapsed;
     }
 }
