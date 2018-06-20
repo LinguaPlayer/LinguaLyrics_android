@@ -14,11 +14,6 @@
             android:defaultValue="true" />
     </fragment>
     <fragment
-        android:id="@+id/nav_recent_tracks"
-        android:name="habibkazemi.ir.lingualyrics_android.ui.recenttracks.RecentTracksFragment"
-        android:label="fragment_recent_tracks"
-        tools:layout="@layout/fragment_recent_tracks" />
-    <fragment
         android:id="@+id/nav_About"
         android:name="habibkazemi.ir.lingualyrics_android.ui.about.AboutFragment"
         android:label="fragment_about"
@@ -38,9 +33,5 @@
         android:id="@+id/lyricListFragment"
         android:name="habibkazemi.ir.lingualyrics_android.ui.lyriclist.LyricListFragment"
         android:label="fragment_lyric_list"
-        tools:layout="@layout/fragment_lyric_list" >
-        <action
-            android:id="@+id/action_lyricListFragment_to_nav_lyrics"
-            app:destination="@id/nav_lyrics" />
-    </fragment>
+        tools:layout="@layout/fragment_lyric_list" ></fragment>
 </navigation>

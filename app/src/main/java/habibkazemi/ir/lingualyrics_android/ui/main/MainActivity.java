@@ -2,8 +2,6 @@ package habibkazemi.ir.lingualyrics_android.ui.main;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -17,7 +15,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -92,9 +89,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         else
             mCurrentFragmentID = savedInstanceState.getInt(Constants.KEY_CURRENT_FRAGMENT_ID, R.id.nav_lyrics);
 
-//        I don't think it's a good idea to use colorPalette generator here
-//        generateColorPalette();
-
         mLyricViewModel = ViewModelProviders.of(this).get(LyricViewModel.class);
     }
 
@@ -139,17 +133,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     protected void onPause() {
         super.onPause();
         mAppBarLayout.removeOnOffsetChangedListener(this);
-    }
-
-    private void generateColorPalette(/* get bitmpa? , or path?*/) {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ocean);
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() { @Override
-            public void onGenerated(Palette palette) {
-                int mutedColor;
-                mutedColor = palette.getMutedColor(R.color.colorPrimary);
-                mCollapsingToolbarLayout.setContentScrimColor(mutedColor);
-            }
-        });
     }
 
     private void prepareNavDrawer() {
@@ -250,10 +233,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         mCurrentFragmentID =  id;
 
         switch (id) {
-            case R.id.nav_recent_tracks:
-                collapseAppBar();
-                lockAppBar();
-                break;
             case R.id.nav_saved_lyrics:
                 collapseAppBar();
                 lockAppBar();
@@ -278,8 +257,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
     private String getTitle(int id) {
         switch (id) {
-            case R.id.nav_recent_tracks:
-                return getResources().getString(R.string.recent_lyrics);
             case R.id.nav_saved_lyrics:
                 return getResources().getString(R.string.saved_lyrics);
             case R.id.nav_settings:

@@ -4,12 +4,9 @@
         <item android:id="@+id/nav_lyrics"
               android:title="Lyrics"
               android:icon="@drawable/ic_menu_lyrics"/>
-        <item android:id="@+id/nav_recent_tracks"
-            android:title="Recent Tracks"
-            android:icon="@drawable/ic_menu_recent_tracks"/>
-        <item android:id="@+id/nav_saved_lyrics"
-            android:title="Saved Lyrics"
-            android:icon="@drawable/ic_menu_saved_lyrics"/>
+        <!--<item android:id="@+id/nav_saved_lyrics"-->
+            <!--android:title="Saved Lyrics"-->
+            <!--android:icon="@drawable/ic_menu_saved_lyrics"/>-->
     </group>
 
     <group android:id="@+id/section2" android:checkableBehavior="single">
