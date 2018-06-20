@@ -18,6 +18,13 @@
     <string name="about">About</string>
 
     <string name="lyric_not_found">No lyric found</string>
+    
+    <!--About Fragment-->
+    <string name="about_name">Lingua Lyrics</string>
+    <string name="about_description">Open source lyric app for android</string>
+    <string name="about_developer">Developer: Habib Kazemi</string>
+    <string name="about_source_code">Source Code:</string>
+    <string name="about_source_code_link">https://github.com/LinguaPlayer/LinguaLyrics-for-android</string>
 
 
 </resources>
