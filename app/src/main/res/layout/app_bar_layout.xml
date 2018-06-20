@@ -38,6 +38,12 @@
                 android:layout_height="160dp"
                 android:layout_gravity="bottom"
                 android:background="@drawable/scrim"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_gravity="top"
+                android:background="@drawable/scrim_reverse"/>
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
