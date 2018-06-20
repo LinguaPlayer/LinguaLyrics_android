@@ -372,6 +372,11 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         }
     }
 
+    @Override
+    public void onLyricFetchLoading() {
+       fillToolbarItems(null, getResources().getString(R.string.artist), getResources().getString(R.string.title));
+    }
+
     private void fillToolbarItems(String imageUrl, String artist, String title) {
         musicTitleTextView.setText(title);
         artistTextView.setText(artist);

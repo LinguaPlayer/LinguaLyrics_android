@@ -53,13 +53,18 @@ public class LyricsFragment extends Fragment{
         menu.findItem(R.id.search).setVisible(true);
     }
 
-    public void loadingLyricFailed(Resource<Lyric> lyricResource) {
+    public void fetchingLyricFailed(Resource<Lyric> lyricResource) {
         hideSpinner();
         // TODO: Show artwork and icons instead of text
         lyricTexView.setText(lyricResource.message);
     }
 
-    public void loadingLyricSucceed(Resource<Lyric> lyricResource) {
+    public void fetchingLyricLoading() {
+        showSpinner();
+        ((OnLyricListener) getActivity()).onLyricFetchLoading();
+
+    }
+    public void fetchingLyricSucceed(Resource<Lyric> lyricResource) {
         hideSpinner();
         ((OnLyricListener) getActivity()).onLyricFetchComplete(lyricResource.data);
 
@@ -90,13 +95,13 @@ public class LyricsFragment extends Fragment{
         mLyricViewModel.getLyric().observe(this, lyricResource -> {
             switch (lyricResource.status) {
                 case LOADING:
-                    showSpinner();
+                    fetchingLyricLoading();
                     break;
                 case SUCCESS:
-                    loadingLyricSucceed(lyricResource);
+                    fetchingLyricSucceed(lyricResource);
                     break;
                 case ERROR:
-                    loadingLyricFailed(lyricResource);
+                    fetchingLyricFailed(lyricResource);
                     break;
             }
         });
@@ -142,5 +147,6 @@ public class LyricsFragment extends Fragment{
 
     public interface OnLyricListener {
         void onLyricFetchComplete(Lyric lyric);
+        void onLyricFetchLoading();
     }
 }
