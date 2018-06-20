@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +20,7 @@ import habibkazemi.ir.lingualyrics_android.R;
 import habibkazemi.ir.lingualyrics_android.util.Constants;
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;
 import habibkazemi.ir.lingualyrics_android.vo.Resource;
+import timber.log.Timber;
 
 public class LyricsFragment extends Fragment{
 
@@ -110,7 +110,6 @@ public class LyricsFragment extends Fragment{
             Boolean expandAppBar = getArguments().getBoolean(Constants.KEY_EXPAND_APP_BAR);
             if (expandAppBar != null && expandAppBar) {
                 ((MainActivity) getActivity()).expandAppBar();
-                Log.d("Lyric", "expandAppBar first if");
             }
             else {
                 ((MainActivity) getActivity()).prepareAppBarCollapsedExpandedState();
@@ -135,13 +134,13 @@ public class LyricsFragment extends Fragment{
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        Log.d("Lyric", "LyricsFragments: onDestroyView");
+        Timber.d("LyricsFragments: onDestroyView");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("Lyric", "LyricsFragments: onDestroy");
+        Timber.d( "LyricsFragments: onDestroy");
 
     }
 

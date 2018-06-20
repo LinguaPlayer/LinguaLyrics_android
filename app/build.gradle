@@ -75,5 +75,8 @@ dependencies {
     // Paging
     implementation "android.arch.paging:runtime:$rootProject.paging_version"
 
+    // Timber
+    implementation 'com.jakewharton.timber:timber:4.7.0'
+
 
 }

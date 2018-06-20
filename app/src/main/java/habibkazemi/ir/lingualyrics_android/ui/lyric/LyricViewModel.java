@@ -10,9 +10,6 @@ import android.arch.lifecycle.Transformations;
 import android.arch.paging.PagedList;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.util.Log;
-
-import java.util.List;
 import habibkazemi.ir.lingualyrics_android.repository.LyricRepository;
 import habibkazemi.ir.lingualyrics_android.util.Constants;
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;
