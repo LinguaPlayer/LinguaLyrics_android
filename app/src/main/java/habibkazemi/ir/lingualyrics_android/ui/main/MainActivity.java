@@ -1,4 +1,4 @@
-package habibkazemi.ir.lingualyrics_android;
+package habibkazemi.ir.lingualyrics_android.ui.main;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
@@ -36,6 +36,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import habibkazemi.ir.lingualyrics_android.R;
 import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricViewModel;
 import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricsFragment;
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;

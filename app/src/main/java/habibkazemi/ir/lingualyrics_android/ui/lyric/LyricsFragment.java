@@ -16,7 +16,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import habibkazemi.ir.lingualyrics_android.MainActivity;
+import habibkazemi.ir.lingualyrics_android.ui.main.MainActivity;
 import habibkazemi.ir.lingualyrics_android.R;
 import habibkazemi.ir.lingualyrics_android.util.Constants;
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;
