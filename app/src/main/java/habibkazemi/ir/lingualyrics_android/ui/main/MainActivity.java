@@ -1,6 +1,7 @@
 package habibkazemi.ir.lingualyrics_android.ui.main;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -26,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import androidx.navigation.NavController;
@@ -38,6 +40,7 @@ import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricViewModel;
 import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricsFragment;
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;
 import habibkazemi.ir.lingualyrics_android.util.Constants;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener, View.OnTouchListener, LyricsFragment.OnLyricListener, MaterialSearchView.OnQueryTextListener{
 
@@ -358,7 +361,20 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     private void fillToolbarItems(String imageUrl, String artist, String title) {
         musicTitleTextView.setText(title);
         artistTextView.setText(artist);
-        Picasso.get().load(imageUrl).into(coverArtImageView);
+        SharedPreferences sp = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String art_work = sp.getString(getResources().getString(R.string.settings_key_art_work), "0");
+        switch (art_work){
+            case "0":
+                Picasso.get().load(imageUrl).into(coverArtImageView);
+                break;
+            case "1":
+                Picasso.get().load(imageUrl).networkPolicy(NetworkPolicy.OFFLINE).into(coverArtImageView);
+                break;
+            case "2":
+                imageUrl = null;
+                Picasso.get().load(imageUrl).into(coverArtImageView);
+                break;
+        }
     }
 
 }

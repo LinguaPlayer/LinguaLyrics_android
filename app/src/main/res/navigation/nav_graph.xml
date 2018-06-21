@@ -8,11 +8,7 @@
         android:id="@+id/nav_lyrics"
         android:name="habibkazemi.ir.lingualyrics_android.ui.lyric.LyricsFragment"
         android:label="fragment_lyrics"
-        tools:layout="@layout/fragment_lyrics" >
-        <argument
-            android:name="expand"
-            android:defaultValue="true" />
-    </fragment>
+        tools:layout="@layout/fragment_lyrics" ></fragment>
     <fragment
         android:id="@+id/nav_About"
         android:name="habibkazemi.ir.lingualyrics_android.ui.about.AboutFragment"
@@ -33,5 +29,10 @@
         android:id="@+id/lyricListFragment"
         android:name="habibkazemi.ir.lingualyrics_android.ui.lyriclist.LyricListFragment"
         android:label="fragment_lyric_list"
-        tools:layout="@layout/fragment_lyric_list" ></fragment>
+        tools:layout="@layout/fragment_lyric_list" >
+        <action
+            android:id="@+id/action_lyricListFragment_to_nav_lyrics"
+            app:destination="@id/nav_lyrics"
+            app:popUpToInclusive="false" />
+    </fragment>
 </navigation>

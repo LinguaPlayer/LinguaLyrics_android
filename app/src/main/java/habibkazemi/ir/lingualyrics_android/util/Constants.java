@@ -15,7 +15,7 @@ public class Constants {
 
     // Bundle keys
     public static final String KEY_CURRENT_FRAGMENT_ID = "current_fragment_id";
-    public static final String KEY_EXPAND_APP_BAR = "expand_app_bar";
+    public static final String FROM_LYRIC_LIST = "from_lyric_list";
 
     public static String LAST_ACCESSED_LYRIC_ID  = "last_accessed_lyric_id";
     public static String SHARED_PREFERENCES_NAME = "lingua_lyrics";

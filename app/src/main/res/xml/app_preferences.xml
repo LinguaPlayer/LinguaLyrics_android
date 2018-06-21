@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/settings_art_work_category">
+
+    </PreferenceCategory>
+
+    <CheckBoxPreference
+        android:key="@string/settings_key_expand_app_bar"
+        android:title="@string/settings_expand_app_bar_on_lyric_click"
+        android:summary="@string/settings_expand_app_bar_summary"
+        android:defaultValue="true" />
+
+    <ListPreference
+        android:key="@string/settings_key_art_work"
+        android:title="@string/settings_art_work"
+        android:summary="@string/settings_art_work_summary"
+        android:entries="@array/prefs_artwork_entries"
+        android:entryValues="@array/prefs_artwork_values"
+        android:defaultValue="@string/settings_art_work_online_value"/>
+
+</PreferenceScreen>

@@ -14,8 +14,6 @@ import android.view.ViewGroup;
 
 import com.wang.avi.AVLoadingIndicatorView;
 
-import java.util.ArrayList;
-
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import butterknife.BindView;
@@ -23,7 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import habibkazemi.ir.lingualyrics_android.R;
 import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricViewModel;
-import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricsFragment;
+import habibkazemi.ir.lingualyrics_android.util.Constants;
 import habibkazemi.ir.lingualyrics_android.vo.LyricLink;
 import habibkazemi.ir.lingualyrics_android.vo.Status;
 
@@ -105,9 +103,9 @@ public class LyricListFragment extends Fragment implements LyricRecyclerAdapter.
     @Override
     public void onItemClick(LyricLink lyricLink) {
         Bundle bundle = new Bundle();
-        bundle.putBoolean("expand_app_bar", true);
+        bundle.putBoolean(Constants.FROM_LYRIC_LIST, true);
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host);
-        navController.navigate(R.id.nav_lyrics, bundle);
+        navController.navigate(R.id.action_lyricListFragment_to_nav_lyrics, bundle);
         mLyricViewModel.queryLyricByUrl(lyricLink.getUrl());
     }
 

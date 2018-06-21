@@ -1,6 +1,7 @@
 package habibkazemi.ir.lingualyrics_android.ui.lyric;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -106,14 +107,18 @@ public class LyricsFragment extends Fragment{
             }
         });
 
-        if (getArguments() != null) {
-            Boolean expandAppBar = getArguments().getBoolean(Constants.KEY_EXPAND_APP_BAR);
-            if (expandAppBar != null && expandAppBar) {
+        SharedPreferences sp = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean expandAppBar = sp.getBoolean(getResources().getString(R.string.settings_key_expand_app_bar), true);
+        boolean fromLyricList = false;
+        if (getArguments() != null)
+            fromLyricList = getArguments().getBoolean(Constants.FROM_LYRIC_LIST, false);
+        // If it navigates from lyricListFragments checks the settings
+        // else it preserves the previous state
+        if (fromLyricList) {
+            if (expandAppBar)
                 ((MainActivity) getActivity()).expandAppBar();
-            }
-            else {
-                ((MainActivity) getActivity()).prepareAppBarCollapsedExpandedState();
-            }
+        } else {
+            ((MainActivity) getActivity()).prepareAppBarCollapsedExpandedState();
         }
     }
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="prefs_artwork_entries">
+        <item>@string/settings_art_work_online</item>
+        <item>@string/settings_art_work_offline</item>
+        <item>@string/settings_art_work_disable</item>
+    </array>
+    <string-array name="prefs_artwork_values">
+        <item>@string/settings_art_work_online_value</item>
+        <item>@string/settings_art_work_offline_value</item>
+        <item>@string/settings_art_work_disable_value</item>
+    </string-array>
+</resources>
