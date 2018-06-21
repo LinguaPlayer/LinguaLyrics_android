@@ -3,7 +3,9 @@ package habibkazemi.ir.lingualyrics_android.ui.lyriclist;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.constraint.Group;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -24,6 +28,7 @@ import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricViewModel;
 import habibkazemi.ir.lingualyrics_android.util.Constants;
 import habibkazemi.ir.lingualyrics_android.vo.LyricLink;
 import habibkazemi.ir.lingualyrics_android.vo.Status;
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,6 +41,13 @@ public class LyricListFragment extends Fragment implements LyricRecyclerAdapter.
 
     @BindView(R.id.progress_loader)
     public AVLoadingIndicatorView loadingIndicator;
+
+    @BindView(R.id.message_group)
+    public Group messageGroup;
+    @BindView(R.id.message_icon)
+    public ImageView messageIcon;
+    @BindView(R.id.message_text)
+    public TextView messageText;
 
     private Unbinder unbinder;
     private LyricViewModel mLyricViewModel;
@@ -81,16 +93,26 @@ public class LyricListFragment extends Fragment implements LyricRecyclerAdapter.
 
             if (listResource.status == Status.SUCCESS) {
                 hideSpinner();
+                if (listResource.data == null || listResource.data.isEmpty())
+                    showMessageError(R.drawable.ic_not_found, getResources().getString(R.string.no_lyrics_found));
             }
 
             if (listResource.status == Status.ERROR) {
                 hideSpinner();
+                showMessageError(R.drawable.ic_network_error, getResources().getString(R.string.network_error));
             }
 
             if (listResource.data != null) {
                 lyricRecyclerAdapter.submitList(listResource.data);
             }
         });
+    }
+
+    public void showMessageError(@DrawableRes int imageResource, String message) {
+        mLyricListRecyclerView.setVisibility(View.GONE);
+        messageGroup.setVisibility(View.VISIBLE);
+        messageText.setText(message);
+        messageIcon.setImageResource(imageResource);
     }
 
     @Override

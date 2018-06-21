@@ -44,4 +44,9 @@
     <string name="settings_art_work_offline_value">1</string>
     <string name="settings_art_work_disable_value">2</string>
 
+    <!--Lyrics Fragment-->
+    <string name="message_icon">Icon of error, not found and ...</string>
+    <string name="network_error">Check you internet connection</string>
+    <string name="no_lyrics_found">No lyrics found</string>
+
 </resources>

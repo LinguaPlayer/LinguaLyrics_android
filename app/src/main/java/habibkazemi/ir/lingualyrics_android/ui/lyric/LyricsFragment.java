@@ -2,14 +2,18 @@ package habibkazemi.ir.lingualyrics_android.ui.lyric;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.constraint.Group;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -32,6 +36,12 @@ public class LyricsFragment extends Fragment{
     public TextView lyricTexView;
     @BindView(R.id.progress_loader)
     public AVLoadingIndicatorView loadingIndicator;
+    @BindView(R.id.message_group)
+    public Group messageGroup;
+    @BindView(R.id.message_icon)
+    public ImageView messageIcon;
+    @BindView(R.id.message_text)
+    public TextView messageText;
 
     public LyricsFragment() {
         // Required empty public constructor
@@ -57,7 +67,14 @@ public class LyricsFragment extends Fragment{
     public void fetchingLyricFailed(Resource<Lyric> lyricResource) {
         hideSpinner();
         // TODO: Show artwork and icons instead of text
-        lyricTexView.setText(lyricResource.message);
+        showMessageError(R.drawable.ic_network_error, getResources().getString(R.string.network_error));
+    }
+
+    public void showMessageError(@DrawableRes int imageResource, String message) {
+        lyricTexView.setVisibility(View.GONE);
+        messageGroup.setVisibility(View.VISIBLE);
+        messageText.setText(message);
+        messageIcon.setImageResource(imageResource);
     }
 
     public void fetchingLyricLoading() {
@@ -70,11 +87,13 @@ public class LyricsFragment extends Fragment{
         ((OnLyricListener) getActivity()).onLyricFetchComplete(lyricResource.data);
 
         if (lyricResource != null && lyricResource.data != null) {
+            lyricTexView.setVisibility(View.VISIBLE);
+            messageGroup.setVisibility(View.GONE);
             mLyricViewModel.setLastLyric(lyricResource.data);
             String lyricText = lyricResource.data.getLyricText();
             lyricTexView.setText(lyricText);
         } else {
-            lyricTexView.setText(getResources().getText(R.string.lyric_not_found));
+            showMessageError(R.drawable.ic_not_found, getResources().getString(R.string.no_lyrics_found));
         }
     }
 

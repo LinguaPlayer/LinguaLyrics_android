@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         mAppBarLayout.setExpanded(true, true);
     }
 
-    private void lockAppBar() {
+    public void lockAppBar() {
         /* Disable the nestedScrolling to disable expanding the
            appBar with dragging the mNestedScrollView below it */
         ViewCompat.setNestedScrollingEnabled(mNestedScrollView, false);
