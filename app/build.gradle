@@ -6,8 +6,8 @@ android {
         applicationId "habibkazemi.ir.lingualyrics_android"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode generateVersionCode() // 150010203
+        versionName generateVersionName() // 1.2.3-SNAPSHOT
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -21,6 +21,24 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+}
+
+private Integer generateVersionCode() {
+    return rootProject.minSdkVersion * 10000000 + rootProject.versionMajor * 10000 + rootProject.versionMinor * 100 + rootProject.versionPatch
+}
+
+private String generateVersionName() {
+    String versionName = "${rootProject.versionMajor}.${rootProject.versionMinor}.${rootProject.versionPatch}"
+    if (rootProject.versionClassifier == null) {
+        if (rootProject.isSnapshot) {
+            rootProject.versionClassifier = "SNAPSHOT"
+        }
+    }
+
+    if (rootProject.versionClassifier != null) {
+        versionName += "-" + rootProject.versionClassifier
+    }
+    return versionName
 }
 
 dependencies {

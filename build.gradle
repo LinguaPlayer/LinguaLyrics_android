@@ -27,6 +27,12 @@ task clean(type: Delete) {
 }
 
 ext {
+    versionMajor = 0
+    versionMinor = 1
+    versionPatch = 0
+    versionClassifier = null
+    isSnapshot = true
+
     // sdk and tools
     minSdkVersion = 16
     targetSdkVersion = 26

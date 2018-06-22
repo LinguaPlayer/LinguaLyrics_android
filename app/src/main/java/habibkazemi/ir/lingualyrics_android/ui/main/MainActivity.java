@@ -2,6 +2,7 @@ package habibkazemi.ir.lingualyrics_android.ui.main;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -41,7 +42,6 @@ import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricViewModel;
 import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricsFragment;
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;
 import habibkazemi.ir.lingualyrics_android.util.Constants;
-import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener, View.OnTouchListener, LyricsFragment.OnLyricListener, MaterialSearchView.OnQueryTextListener{
 
@@ -266,7 +266,14 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
             case R.id.nav_settings:
                 return getResources().getString(R.string.settings);
             case R.id.nav_About:
-                return getResources().getString(R.string.about);
+                String versionName = "0";
+                try {
+                    versionName = getPackageManager()
+                            .getPackageInfo(getPackageName(), 0).versionName;
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return versionName;
             default:
                 return getResources().getString(R.string.lingua_lyrics);
         }
@@ -363,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         musicTitleTextView.setText(title);
         artistTextView.setText(artist);
         SharedPreferences sp = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String art_work = sp.getString(getResources().getString(R.string.settings_key_art_work), "0");
+        String art_work = sp.getString(getResources().getString(R.string.settings_key_album_art), "0");
         String imageProxy = LyricsApi.BASE_URL + "api/v1/image/?image="+imageUrl;
         switch (art_work){
             case "0":
@@ -378,5 +385,4 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                 break;
         }
     }
-
 }

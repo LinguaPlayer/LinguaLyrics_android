@@ -23,26 +23,26 @@
     <string name="about_description">Open source lyric app for android</string>
     <string name="about_developer">Developer: Habib Kazemi</string>
     <string name="about_source_code">Source Code:</string>
-    <string name="about_source_code_link">https://github.com/LinguaPlayer/LinguaLyrics-for-android</string>
+    <string name="about_source_code_link">https://github.com/LinguaPlayer/LinguaLyrics_android</string>
     
     <!--Settings-->
-    <string name="settings_expand_app_bar_on_lyric_click">Expand art work</string>
-    <string name="settings_expand_app_bar_summary">Expand the art work on lyric click</string>
+    <string name="settings_expand_app_bar_on_lyric_click">Expand album art</string>
+    <string name="settings_expand_app_bar_summary">Expand the album art on lyric click</string>
     <string name="settings_key_expand_app_bar">expand_app_bar_key</string>
 
-    <string name="settings_art_work">Art work</string>
-    <string name="settings_art_work_summary">Download artworks\nOnly show cached artworks\nDisable artworks</string>
-    <string name="settings_key_art_work">art_work_key</string>
+    <string name="settings_album_art">Album art</string>
+    <string name="settings_album_art_summary">Download album arts\nOnly show cached album arts\nDisable album arts</string>
+    <string name="settings_key_album_art">album_art_key</string>
 
-    <string name="settings_art_work_category">Art work</string>
+    <string name="settings_album_art_category">Album Art</string>
 
-    <string name="settings_art_work_offline">Offline</string>
-    <string name="settings_art_work_online">Online</string>
-    <string name="settings_art_work_disable">Disable</string>
+    <string name="settings_album_art_offline">Offline</string>
+    <string name="settings_album_art_online">Online</string>
+    <string name="settings_album_art_disable">Disable</string>
 
-    <string name="settings_art_work_online_value">0</string>
-    <string name="settings_art_work_offline_value">1</string>
-    <string name="settings_art_work_disable_value">2</string>
+    <string name="settings_album_art_online_value">0</string>
+    <string name="settings_album_art_offline_value">1</string>
+    <string name="settings_album_art_disable_value">2</string>
 
     <!--Lyrics Fragment-->
     <string name="message_icon">Icon of error, not found and ...</string>
