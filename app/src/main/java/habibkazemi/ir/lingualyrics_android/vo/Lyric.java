@@ -19,6 +19,10 @@ public class Lyric {
 	@Expose
 	private String artist;
 
+	@SerializedName("source")
+	@Expose
+	private String source;
+
 	@SerializedName("success")
 	@Expose
 	private boolean success;
@@ -99,14 +103,19 @@ public class Lyric {
 
 	public void setId(int id) {this.id = id;}
 
+	public String getSource() {return this.source;}
+
+	public void setSource(String source) {this.source = source;}
+
 	@Override
  	public String toString(){
 		return 
 			"Lyric{" +
 			"lyric_text = '" + lyricText + '\'' + 
 			",artist = '" + artist + '\'' + 
-			",success = '" + success + '\'' + 
-			",album = '" + album + '\'' + 
+			",success = '" + success + '\'' +
+            ",source = '" + source + '\'' +
+			",album = '" + album + '\'' +
 			",cover_art_image_url = '" + coverArtImageUrl + '\'' + 
 			",title = '" + title + '\'' + 
 			",url = '" + url + '\'' + 

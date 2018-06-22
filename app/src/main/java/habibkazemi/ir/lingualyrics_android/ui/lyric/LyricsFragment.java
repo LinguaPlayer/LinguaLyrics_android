@@ -91,7 +91,7 @@ public class LyricsFragment extends Fragment{
             messageGroup.setVisibility(View.GONE);
             mLyricViewModel.setLastLyric(lyricResource.data);
             String lyricText = lyricResource.data.getLyricText();
-            lyricTexView.setText(lyricText);
+            lyricTexView.setText(lyricText + "\n\n Source: " + lyricResource.data.getSource() + "\n");
         } else {
             showMessageError(R.drawable.ic_not_found, getResources().getString(R.string.no_lyrics_found));
         }
