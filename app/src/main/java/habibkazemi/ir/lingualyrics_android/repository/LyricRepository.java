@@ -19,6 +19,7 @@ import habibkazemi.ir.lingualyrics_android.vo.Lyric;
 import habibkazemi.ir.lingualyrics_android.vo.LyricLink;
 import habibkazemi.ir.lingualyrics_android.vo.Resource;
 import retrofit2.Call;
+import timber.log.Timber;
 
 public class LyricRepository {
 
@@ -39,9 +40,8 @@ public class LyricRepository {
         return new NetworkBoundResource<Lyric, Lyric>() {
             @Override
             protected void saveCallResult(@NonNull Lyric item) {
-                if (item == null)
-                    Log.d("Lyric", "Yeah item is null");
-                mLyricDao.insert(item);
+                if (item != null)
+                    mLyricDao.insert(item);
             }
 
             @Override
@@ -69,9 +69,8 @@ public class LyricRepository {
         return new NetworkBoundResource <PagedList<LyricLink> , List<LyricLink> > () {
             @Override
             protected void saveCallResult(@NonNull List<LyricLink> items) {
-                if (items == null)
-                    Log.d("Lyric", "Yeah items is null");
-                mLyricDao.insert(items);
+                if (items != null)
+                    mLyricDao.insert(items);
             }
 
             @Override
