@@ -21,8 +21,8 @@ public class RetrofitClient {
         if(retrofit == null){
             retrofit = new Retrofit.Builder()
                     .client(new OkHttpClient.Builder()
-                                .readTimeout(60, TimeUnit.SECONDS)
-                                .connectTimeout(60, TimeUnit.SECONDS)
+//                                .readTimeout(60, TimeUnit.SECONDS)
+//                                .connectTimeout(60, TimeUnit.SECONDS)
                                 .addInterceptor(new ConnectivityInterceptor(context))
                                 .build() )
                     .baseUrl(baseUrl)

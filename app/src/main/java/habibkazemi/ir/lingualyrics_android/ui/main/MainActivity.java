@@ -36,6 +36,7 @@ import androidx.navigation.ui.NavigationUI;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import habibkazemi.ir.lingualyrics_android.R;
+import habibkazemi.ir.lingualyrics_android.api.LyricsApi;
 import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricViewModel;
 import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricsFragment;
 import habibkazemi.ir.lingualyrics_android.vo.Lyric;
@@ -363,12 +364,13 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         artistTextView.setText(artist);
         SharedPreferences sp = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String art_work = sp.getString(getResources().getString(R.string.settings_key_art_work), "0");
+        String imageProxy = LyricsApi.BASE_URL + "api/v1/image/?image="+imageUrl;
         switch (art_work){
             case "0":
-                Picasso.get().load(imageUrl).into(coverArtImageView);
+                Picasso.get().load(imageProxy).into(coverArtImageView);
                 break;
             case "1":
-                Picasso.get().load(imageUrl).networkPolicy(NetworkPolicy.OFFLINE).into(coverArtImageView);
+                Picasso.get().load(imageProxy).networkPolicy(NetworkPolicy.OFFLINE).into(coverArtImageView);
                 break;
             case "2":
                 imageUrl = null;
