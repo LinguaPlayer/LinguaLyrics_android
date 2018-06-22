@@ -2,9 +2,15 @@
 
 Offline first lyric app for android.
 
-![screenshot1](./LinguaRepo/assets/screenshot1.png)
-![screenshot2](./LinguaRepo/assets/screenshot2.png)
+ <img  width="350" src="./LinguaRepo/assets/screenshot1.png">         <img  width="350" src="./LinguaRepo/assets/screenshot2.png">
 
+Created with Android Jetpack Components:
+- Room
+- Navigation
+- LiveData
+- ViewModel
+- Paging
+ 
 
 ## TODO
 - [ ] Auto detect playing music
