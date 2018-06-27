@@ -87,12 +87,12 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
-        mCollapsingToolbarLayout.setTitle(" ");
+//        mCollapsingToolbarLayout.setTitle(" ");
 
         if (savedInstanceState == null)
             mCurrentFragmentID = R.id.nav_lyrics;
         else
-            mCurrentFragmentID = savedInstanceState.getInt(Constants.KEY_CURRENT_FRAGMENT_ID, R.id.nav_lyrics);
+            mCurrentFragmentID = savedInstanceState.getInt(Constants.INSTANCE.getKEY_CURRENT_FRAGMENT_ID(), R.id.nav_lyrics);
 
         mLyricViewModel = ViewModelProviders.of(this).get(LyricViewModel.class);
     }
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(Constants.KEY_CURRENT_FRAGMENT_ID, mCurrentFragmentID);
+        outState.putInt(Constants.INSTANCE.getKEY_CURRENT_FRAGMENT_ID(), mCurrentFragmentID);
     }
 
     @Override

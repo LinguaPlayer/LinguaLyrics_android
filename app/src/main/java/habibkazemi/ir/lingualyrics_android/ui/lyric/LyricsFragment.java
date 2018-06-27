@@ -130,7 +130,7 @@ public class LyricsFragment extends Fragment{
         boolean expandAppBar = sp.getBoolean(getResources().getString(R.string.settings_key_expand_app_bar), true);
         boolean fromLyricList = false;
         if (getArguments() != null)
-            fromLyricList = getArguments().getBoolean(Constants.FROM_LYRIC_LIST, false);
+            fromLyricList = getArguments().getBoolean(Constants.INSTANCE.getFROM_LYRIC_LIST(), false);
         // If it navigates from lyricListFragments checks the settings
         // else it preserves the previous state
         if (fromLyricList) {

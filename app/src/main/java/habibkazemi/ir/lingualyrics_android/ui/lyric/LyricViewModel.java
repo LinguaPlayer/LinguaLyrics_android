@@ -72,14 +72,14 @@ public class LyricViewModel extends AndroidViewModel {
     }
 
     public LiveData<Lyric> getLastLyric() {
-        int id = getApplication().getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE).getInt(Constants.LAST_ACCESSED_LYRIC_ID, 0);
+        int id = getApplication().getSharedPreferences(Constants.INSTANCE.getSHARED_PREFERENCES_NAME(), MODE_PRIVATE).getInt(Constants.INSTANCE.getLAST_ACCESSED_LYRIC_ID(), 0);
         return mRepository.getLyricById(id);
     }
 
     public void setLastLyric(Lyric lastLyric) {
         if (lastLyric != null) {
-            SharedPreferences.Editor editor = getApplication().getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE).edit();
-            editor.putInt(Constants.LAST_ACCESSED_LYRIC_ID, lastLyric.getId());
+            SharedPreferences.Editor editor = getApplication().getSharedPreferences(Constants.INSTANCE.getSHARED_PREFERENCES_NAME(), MODE_PRIVATE).edit();
+            editor.putInt(Constants.INSTANCE.getLAST_ACCESSED_LYRIC_ID(), lastLyric.getId());
             editor.apply();
         }
     }

@@ -126,7 +126,7 @@ public class LyricListFragment extends Fragment implements LyricRecyclerAdapter.
     @Override
     public void onItemClick(LyricLink lyricLink) {
         Bundle bundle = new Bundle();
-        bundle.putBoolean(Constants.FROM_LYRIC_LIST, true);
+        bundle.putBoolean(Constants.INSTANCE.getFROM_LYRIC_LIST(), true);
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host);
         navController.navigate(R.id.action_lyricListFragment_to_nav_lyrics, bundle);
         mLyricViewModel.queryLyricByUrl(lyricLink.getUrl());

@@ -24,7 +24,7 @@ public class ConnectivityInterceptor implements Interceptor {
 
     @Override
     public Response intercept(Chain chain) throws IOException {
-        if (!NetworkUtil.isOnline(mContext)) {
+        if (!NetworkUtil.INSTANCE.isOnline(mContext)) {
             throw new NoConnectivityException();
         }
 

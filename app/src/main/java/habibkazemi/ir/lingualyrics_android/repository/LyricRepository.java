@@ -31,7 +31,7 @@ public class LyricRepository {
 
 
     public LyricRepository(Application application) {
-        LinguaLyricsDb linguaLyricsDb = LinguaLyricsDb.getDatabase(application.getApplicationContext());
+        LinguaLyricsDb linguaLyricsDb = LinguaLyricsDb.Companion.getDatabase(application.getApplicationContext());
         mLyricDao = linguaLyricsDb.lyricDao();
         mLyricsService = LyricsApi.getLyricService(application);
     }
