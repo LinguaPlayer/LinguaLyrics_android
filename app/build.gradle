@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -53,6 +54,7 @@ dependencies {
     implementation "com.android.support:preference-v7:$rootProject.supportLibraryVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeCompilerVersion"
 
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // material search view
     implementation "com.miguelcatalan:materialsearchview:$rootProject.materialsearchview"
 
@@ -94,7 +96,10 @@ dependencies {
     implementation "android.arch.paging:runtime:$rootProject.paging_version"
 
     // Timber
-    implementation 'com.jakewharton.timber:timber:4.7.0'
+    implementation "com.jakewharton.timber:timber:$rootProject.timber"
 
 
+}
+repositories {
+    mavenCentral()
 }
