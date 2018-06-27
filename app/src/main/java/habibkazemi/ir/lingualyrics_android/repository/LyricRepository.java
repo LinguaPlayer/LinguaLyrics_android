@@ -33,7 +33,7 @@ public class LyricRepository {
     public LyricRepository(Application application) {
         LinguaLyricsDb linguaLyricsDb = LinguaLyricsDb.Companion.getDatabase(application.getApplicationContext());
         mLyricDao = linguaLyricsDb.lyricDao();
-        mLyricsService = LyricsApi.getLyricService(application);
+        mLyricsService = LyricsApi.INSTANCE.getLyricService(application);
     }
 
     public LiveData<Resource<Lyric>> loadLyric(String url) {

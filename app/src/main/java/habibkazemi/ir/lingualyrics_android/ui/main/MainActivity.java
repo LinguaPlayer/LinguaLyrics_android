@@ -373,7 +373,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         artistTextView.setText(artist);
         SharedPreferences sp = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String art_work = sp.getString(getResources().getString(R.string.settings_key_album_art), "0");
-        String imageProxy = LyricsApi.BASE_URL + "api/v1/image/?image="+imageUrl;
+        String imageProxy = LyricsApi.INSTANCE.getBASE_URL() + "api/v1/image/?image="+imageUrl;
         switch (art_work){
             case "0":
                 Picasso.get().load(imageProxy).into(coverArtImageView);
