@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;

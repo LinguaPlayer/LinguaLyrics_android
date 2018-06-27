@@ -33,6 +33,7 @@
         <action
             android:id="@+id/action_lyricListFragment_to_nav_lyrics"
             app:destination="@id/nav_lyrics"
-            app:popUpToInclusive="false" />
+            app:popUpTo="@+id/nav_lyrics"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>
