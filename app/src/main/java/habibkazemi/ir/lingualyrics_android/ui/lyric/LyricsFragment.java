@@ -84,14 +84,14 @@ public class LyricsFragment extends Fragment{
     }
     public void fetchingLyricSucceed(Resource<Lyric> lyricResource) {
         hideSpinner();
-        ((OnLyricListener) getActivity()).onLyricFetchComplete(lyricResource.data);
+        ((OnLyricListener) getActivity()).onLyricFetchComplete(lyricResource.getData());
 
-        if (lyricResource != null && lyricResource.data != null) {
+        if (lyricResource != null && lyricResource.getData() != null) {
             lyricTexView.setVisibility(View.VISIBLE);
             messageGroup.setVisibility(View.GONE);
-            mLyricViewModel.setLastLyric(lyricResource.data);
-            String lyricText = lyricResource.data.getLyricText();
-            lyricTexView.setText(lyricText + "\n\n Source: " + lyricResource.data.getSource() + "\n");
+            mLyricViewModel.setLastLyric(lyricResource.getData());
+            String lyricText = lyricResource.getData().getLyricText();
+            lyricTexView.setText(lyricText + "\n\n Source: " + lyricResource.getData().getSource() + "\n");
         } else {
             showMessageError(R.drawable.ic_not_found, getResources().getString(R.string.no_lyrics_found));
         }
@@ -113,7 +113,7 @@ public class LyricsFragment extends Fragment{
 
 
         mLyricViewModel.getLyric().observe(this, lyricResource -> {
-            switch (lyricResource.status) {
+            switch (lyricResource.getStatus()) {
                 case LOADING:
                     fetchingLyricLoading();
                     break;

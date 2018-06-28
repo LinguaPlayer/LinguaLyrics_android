@@ -88,23 +88,23 @@ public class LyricListFragment extends Fragment implements LyricRecyclerAdapter.
         mLyricViewModel = ViewModelProviders.of(getActivity()).get(LyricViewModel.class);
 
         mLyricViewModel.getLyricQueryInDatabaseLiveData().observe(this, listResource -> {
-            if (listResource.status == Status.LOADING) {
+            if (listResource.getStatus() == Status.LOADING) {
                 showSpinner();
             }
 
-            if (listResource.status == Status.SUCCESS) {
+            if (listResource.getStatus() == Status.SUCCESS) {
                 hideSpinner();
-                if (listResource.data == null || listResource.data.isEmpty())
+                if (listResource.getData() == null || listResource.getData().isEmpty())
                     showMessageError(R.drawable.ic_not_found, getResources().getString(R.string.no_lyrics_found));
             }
 
-            if (listResource.status == Status.ERROR) {
+            if (listResource.getStatus() == Status.ERROR) {
                 hideSpinner();
                 showMessageError(R.drawable.ic_network_error, getResources().getString(R.string.network_error));
             }
 
-            if (listResource.data != null) {
-                lyricRecyclerAdapter.submitList(listResource.data);
+            if (listResource.getData() != null) {
+                lyricRecyclerAdapter.submitList(listResource.getData());
             }
         });
     }

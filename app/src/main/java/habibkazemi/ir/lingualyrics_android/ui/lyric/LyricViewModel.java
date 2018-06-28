@@ -55,7 +55,7 @@ public class LyricViewModel extends AndroidViewModel {
             // We don't need this anymore
             mLyricMediatorLiveData.removeSource(mLastLyricLiveData);
 
-            mLyricMediatorLiveData.setValue(Resource.success(lyricResource));
+            mLyricMediatorLiveData.setValue(Resource.Companion.success(lyricResource));
         });
     }
 
