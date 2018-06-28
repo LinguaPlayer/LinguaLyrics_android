@@ -57,11 +57,12 @@ class LyricListFragment : Fragment(), LyricRecyclerAdapter.OnItemClickListener {
 
             if (listResource?.status === Status.ERROR) {
                 hideSpinner()
-                showMessageError(R.drawable.ic_network_error, resources.getString(R.string.network_error))
+                if (listResource.data == null || listResource.data.isEmpty())
+                    showMessageError(R.drawable.ic_network_error, resources.getString(R.string.network_error))
             }
 
-            if (listResource?.data != null) {
-                lyricRecyclerAdapter.submitList(listResource.data)
+            listResource?.data?.let {
+                lyricRecyclerAdapter.submitList(it)
             }
         })
     }
