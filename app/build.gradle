@@ -52,9 +52,7 @@ dependencies {
     implementation "com.android.support:support-v4:$rootProject.supportLibraryVersion"
     implementation "com.android.support:support-vector-drawable:$rootProject.supportLibraryVersion"
     implementation "com.android.support:palette-v7:$rootProject.supportLibraryVersion"
-    implementation "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
     implementation "com.android.support:preference-v7:$rootProject.supportLibraryVersion"
-    kapt "com.jakewharton:butterknife-compiler:$rootProject.butterknifeCompilerVersion"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // material search view

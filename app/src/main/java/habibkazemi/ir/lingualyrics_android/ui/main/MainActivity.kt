@@ -21,7 +21,6 @@ import com.squareup.picasso.Picasso
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
-import butterknife.ButterKnife
 import habibkazemi.ir.lingualyrics_android.R
 import habibkazemi.ir.lingualyrics_android.api.LyricsApi
 import habibkazemi.ir.lingualyrics_android.ui.lyric.LyricViewModel
@@ -38,7 +37,6 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, 
     private var mDrawerToggle: ActionBarDrawerToggle? = null
 
     private var mCurrentFragmentID: Int = 0
-    private val mCurrentFragment: Fragment? = null
 
     private var mSearchView: MaterialSearchView? = null
     private var mLyricViewModel: LyricViewModel? = null
