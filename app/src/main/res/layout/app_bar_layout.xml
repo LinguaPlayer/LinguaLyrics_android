@@ -69,12 +69,13 @@
                     android:layout_height="wrap_content"
                     android:textSize="25sp"
                     android:text="@string/title"/>
+
                 <TextView
-                    android:id="@+id/artist"
+                    android:id="@+id/artist_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="@string/artist"/>
+                    android:text="@string/artist"
+                    android:textSize="20sp" />
             </LinearLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
