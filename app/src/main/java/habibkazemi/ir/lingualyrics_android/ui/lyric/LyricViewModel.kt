@@ -19,6 +19,9 @@ class LyricViewModel(application: Application) : AndroidViewModel(application) {
     private val mLyricQueryByUrlMutableLiveData = MutableLiveData<String>()
     private val mLyricQueryByKeywordMutableLiveData = MutableLiveData<String>()
 
+    internal var lastQuery: String = ""
+        private set
+
     private val mLyricMediatorLiveData: MediatorLiveData<Resource<Lyric>> = MediatorLiveData()
     var appBarCollapsed: Boolean = true
 
@@ -54,6 +57,7 @@ class LyricViewModel(application: Application) : AndroidViewModel(application) {
 
     fun setLyricQuery(query: String) {
         mLyricQueryByKeywordMutableLiveData.value = query
+        lastQuery = query
     }
 
     fun queryLyricByUrl(url: String?) {

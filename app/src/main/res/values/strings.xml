@@ -44,9 +44,17 @@
     <string name="settings_album_art_offline_value">1</string>
     <string name="settings_album_art_disable_value">2</string>
 
+    <string name="settings_search">Search</string>
+    <string name="settings_key_show_previous_search">show_previous_search</string>
+    <string name="settings_show_previous_search_title">Show previous search</string>
+    <string name="settings_show_previous_search_summary">Shows previous search in search bar</string>
+
     <!--Lyrics Fragment-->
     <string name="message_icon">Icon of error, not found and ...</string>
     <string name="network_error">Check you internet connection</string>
     <string name="no_lyrics_found">No lyrics found</string>
+
+
+
 
 </resources>

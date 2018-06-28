@@ -19,4 +19,13 @@
         android:entryValues="@array/prefs_artwork_values"
         android:defaultValue="@string/settings_album_art_online_value"/>
 
+    <PreferenceCategory
+        android:title="@string/settings_search">
+    </PreferenceCategory>
+    <CheckBoxPreference
+        android:key="@string/settings_key_show_previous_search"
+        android:title="@string/settings_show_previous_search_title"
+        android:summary="@string/settings_show_previous_search_summary"
+        android:defaultValue="true" />
+
 </PreferenceScreen>

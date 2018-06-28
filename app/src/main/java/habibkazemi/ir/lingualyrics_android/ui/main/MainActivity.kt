@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CoordinatorLayout
-import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -30,7 +29,7 @@ import habibkazemi.ir.lingualyrics_android.util.Constants
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_layout.*
 
-class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, View.OnTouchListener, LyricsFragment.OnLyricListener, MaterialSearchView.OnQueryTextListener {
+class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, View.OnTouchListener, LyricsFragment.OnLyricListener, MaterialSearchView.OnQueryTextListener, MaterialSearchView.SearchViewListener {
 
     internal var mAppBarCollapsed = true
     internal var mAppBarScrollRange = -1
@@ -62,17 +61,7 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, 
         inflater.inflate(R.menu.lyrics_view_options_menu, menu)
         mSearchView = findViewById(R.id.search_view)
         (mSearchView as MaterialSearchView).setOnQueryTextListener(this)
-        (mSearchView as MaterialSearchView).setOnSearchViewListener(object : MaterialSearchView.SearchViewListener {
-            override fun onSearchViewShown() {
-                // Hack: the collapsing toolbar title is shown on top of searchView
-                // to fix that i make it transparent and reverse it when closed
-                collapsing_toolbar_layout?.setCollapsedTitleTextColor(resources.getColor(R.color.transparent_white))
-            }
-
-            override fun onSearchViewClosed() {
-                collapsing_toolbar_layout?.setCollapsedTitleTextColor(resources.getColor(R.color.white))
-            }
-        })
+        (mSearchView as MaterialSearchView).setOnSearchViewListener(this)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -305,5 +294,19 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, 
                 Picasso.get().load(imageUrl as String).into(cover_art)
             }
         }
+    }
+
+    override fun onSearchViewShown() {
+        // Hack: the collapsing toolbar title is shown on top of searchView
+        // to fix that i make it transparent and reverse it when closed
+        collapsing_toolbar_layout?.setCollapsedTitleTextColor(resources.getColor(R.color.transparent_white))
+        val sp = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val showPreviousSearch = sp.getBoolean(resources.getString(R.string.settings_key_show_previous_search), true)
+        if (showPreviousSearch)
+            mSearchView?.setQuery(mLyricViewModel?.lastQuery, false)
+    }
+
+    override fun onSearchViewClosed() {
+        collapsing_toolbar_layout?.setCollapsedTitleTextColor(resources.getColor(R.color.white))
     }
 }
