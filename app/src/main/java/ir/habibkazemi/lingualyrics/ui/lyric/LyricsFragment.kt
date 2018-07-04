@@ -57,7 +57,7 @@ class LyricsFragment : Fragment() {
 
     private fun fetchingLyricSucceed(lyricResource: Resource<Lyric>?) {
         hideSpinner()
-        (activity as OnLyricListener).onLyricFetchComplete(lyricResource!!.data)
+        (activity as OnLyricListener).onLyricFetchComplete(lyricResource?.data)
 
         if (lyricResource?.data != null) {
             lyric_text?.visibility = View.VISIBLE
