@@ -36,11 +36,11 @@ ext {
 
     // sdk and tools
     minSdkVersion = 16
-    targetSdkVersion = 26
-    buildToolsVersion = '23.0.2'
-    compileSdkVersion = 26
+    targetSdkVersion = 27
+    buildToolsVersion = '28.0.1'
+    compileSdkVersion = 27
 
-    supportLibraryVersion = '26.1.0'
+    supportLibraryVersion = '27.1.1'
     constraintLayoutVersion = '1.1.0'
 
     jUnitVersion = '4.12'
@@ -60,10 +60,4 @@ ext {
     nav_version = "1.0.0-alpha02"
     paging_version = "1.0.0"
     timber = "4.7.0"
-
-
-
-
-
-
 }
