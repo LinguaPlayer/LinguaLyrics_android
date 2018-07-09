@@ -11,7 +11,7 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode generateVersionCode() // 150010203
         versionName generateVersionName() // 1.2.3-SNAPSHOT
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -46,13 +46,13 @@ private String generateVersionName() {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    implementation "com.android.support.constraint:constraint-layout:$rootProject.constraintLayoutVersion"
-    implementation "com.android.support:design:$rootProject.supportLibraryVersion"
-    implementation "com.android.support:support-v4:$rootProject.supportLibraryVersion"
-    implementation "com.android.support:support-vector-drawable:$rootProject.supportLibraryVersion"
-    implementation "com.android.support:palette-v7:$rootProject.supportLibraryVersion"
-    implementation "com.android.support:preference-v7:$rootProject.supportLibraryVersion"
+    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
+    implementation "com.google.android.material:material:$rootProject.supportLibraryVersion"
+    implementation "androidx.legacy:legacy-support-v4:$rootProject.supportLibraryVersion"
+    implementation "androidx.vectordrawable:vectordrawable:$rootProject.supportLibraryVersion"
+    implementation "androidx.palette:palette:$rootProject.supportLibraryVersion"
+    implementation "androidx.preference:preference:$rootProject.supportLibraryVersion"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // material search view
@@ -77,28 +77,29 @@ dependencies {
 
     // Test dependencies
     testImplementation "junit:junit:$rootProject.jUnitVersion"
-    androidTestImplementation "com.android.support.test:runner:$rootProject.testVersion"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoCoreVersion"
+    androidTestImplementation "androidx.test:runner:$rootProject.testVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoCoreVersion"
 
     // Room
-    implementation "android.arch.persistence.room:runtime:$rootProject.room_version"
-    kapt "android.arch.persistence.room:compiler:$rootProject.room_version"
-    testImplementation "android.arch.persistence.room:testing:$rootProject.room_version"
+    implementation "androidx.room:room-runtime:$rootProject.room_version"
+    kapt "androidx.room:room-compiler:$rootProject.room_version"
+    testImplementation "androidx.room:room-testing:$rootProject.room_version"
 
     // ViewModel and LiveData
-    implementation "android.arch.lifecycle:extensions:$rootProject.lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle_version"
 
     // Navigation
     implementation "android.arch.navigation:navigation-fragment:$rootProject.nav_version"
     implementation "android.arch.navigation:navigation-ui:$rootProject.nav_version"
 
     // Paging
-    implementation "android.arch.paging:runtime:$rootProject.paging_version"
+    implementation "androidx.paging:paging-runtime:$rootProject.paging_version"
 
     // Timber
     implementation "com.jakewharton.timber:timber:$rootProject.timber"
 
-
+    //android ktx
+    implementation 'androidx.core:core-ktx:1.0.0-alpha1'
 }
 repositories {
     mavenCentral()

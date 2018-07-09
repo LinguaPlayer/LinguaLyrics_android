@@ -1,6 +1,6 @@
 package ir.habibkazemi.lingualyrics.vo
 
-import android.arch.persistence.room.Entity
+import androidx.room.Entity
 
 
 import com.google.gson.annotations.Expose

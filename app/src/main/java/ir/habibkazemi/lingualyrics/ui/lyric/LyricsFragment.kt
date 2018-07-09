@@ -1,15 +1,20 @@
 package ir.habibkazemi.lingualyrics.ui.lyric
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.v4.app.Fragment
+import androidx.annotation.DrawableRes
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import ir.habibkazemi.lingualyrics.ui.main.MainActivity
 import ir.habibkazemi.lingualyrics.R
 import ir.habibkazemi.lingualyrics.util.Constants
@@ -89,7 +94,7 @@ class LyricsFragment : Fragment() {
                 }
         })
 
-        val sp = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(context!!)
+        val sp = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context!!)
         val expandAppBar = sp.getBoolean(resources.getString(R.string.settings_key_expand_app_bar), true)
         val fromLyricList = arguments?.getBoolean(Constants.FROM_LYRIC_LIST, false) ?: false
         // If it navigates from lyricListFragments checks the settings
@@ -100,6 +105,8 @@ class LyricsFragment : Fragment() {
         } else {
             (activity as MainActivity).prepareAppBarCollapsedExpandedState()
         }
+
+
     }
 
     override fun onResume() {

@@ -1,7 +1,7 @@
 package ir.habibkazemi.lingualyrics.vo
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Index
+import androidx.room.Entity
+import androidx.room.Index
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

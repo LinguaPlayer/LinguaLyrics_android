@@ -1,11 +1,11 @@
 package ir.habibkazemi.lingualyrics.repository
 
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import android.os.AsyncTask
-import android.support.annotation.MainThread
-import android.support.annotation.WorkerThread
+import androidx.annotation.MainThread
+import androidx.annotation.WorkerThread
 
 import ir.habibkazemi.lingualyrics.vo.Resource
 import retrofit2.Call

@@ -1,14 +1,14 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.2.50'
+    ext.kotlin_version = '1.2.51'
 
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-beta01'
+        classpath 'com.android.tools.build:gradle:3.3.0-alpha02'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -38,14 +38,14 @@ ext {
     minSdkVersion = 16
     targetSdkVersion = 27
     buildToolsVersion = '28.0.1'
-    compileSdkVersion = 27
+    compileSdkVersion = 28
 
-    supportLibraryVersion = '27.1.1'
-    constraintLayoutVersion = '1.1.0'
+    supportLibraryVersion = '1.0.0-alpha1'
+    constraintLayoutVersion = '1.1.2'
 
     jUnitVersion = '4.12'
-    espressoCoreVersion = '3.0.2'
-    testVersion = '1.0.2'
+    espressoCoreVersion = '3.1.0-alpha3'
+    testVersion = '1.1.0-alpha3'
 
     materialSearchViewVersion = '1.0.0'
     okhttp = '3.10.0'
@@ -55,9 +55,9 @@ ext {
     retrofit = '2.4.0'
     materialsearchview = '1.0.0'
 
-    room_version = "1.1.0"
-    lifecycle_version = "1.1.1"
+    room_version = '2.0.0-alpha1'
+    lifecycle_version = '2.0.0-alpha1'
     nav_version = "1.0.0-alpha02"
-    paging_version = "1.0.0"
+    paging_version = '2.0.0-alpha1'
     timber = "4.7.0"
 }

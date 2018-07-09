@@ -1,9 +1,9 @@
 package ir.habibkazemi.lingualyrics.repository
 
 import android.app.Application
-import android.arch.lifecycle.LiveData
-import android.arch.paging.LivePagedListBuilder
-import android.arch.paging.PagedList
+import androidx.lifecycle.LiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 
 import ir.habibkazemi.lingualyrics.api.LyricsApi
 import ir.habibkazemi.lingualyrics.api.LyricsService

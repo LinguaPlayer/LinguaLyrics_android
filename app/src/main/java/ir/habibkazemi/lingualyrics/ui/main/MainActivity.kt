@@ -1,19 +1,24 @@
 package ir.habibkazemi.lingualyrics.ui.main
 
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProviders
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.CoordinatorLayout
-import android.support.v4.view.GravityCompat
-import android.support.v4.view.ViewCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.appbar.AppBarLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
@@ -24,10 +29,12 @@ import ir.habibkazemi.lingualyrics.R
 import ir.habibkazemi.lingualyrics.api.LyricsApi
 import ir.habibkazemi.lingualyrics.ui.lyric.LyricViewModel
 import ir.habibkazemi.lingualyrics.ui.lyric.LyricsFragment
+import ir.habibkazemi.lingualyrics.ui.lyriclist.LyricListFragment
 import ir.habibkazemi.lingualyrics.vo.Lyric
 import ir.habibkazemi.lingualyrics.util.Constants
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_layout.*
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, View.OnTouchListener, LyricsFragment.OnLyricListener, MaterialSearchView.OnQueryTextListener, MaterialSearchView.SearchViewListener {
 
@@ -40,8 +47,25 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, 
     private var mSearchView: MaterialSearchView? = null
     private var mLyricViewModel: LyricViewModel? = null
 
+
     val isSearchViewOpen: Boolean?
         get() = mSearchView?.isSearchOpen
+
+
+    var localBroadcastReceiver: BroadcastReceiver = object: BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            val pref = getSharedPreferences(Constants.CURRENT_MUSIC_PREF, Context.MODE_PRIVATE)
+            val artistName = pref?.getString("artist", "")
+            val titleName = pref?.getString("title", "")
+            when (mCurrentFragmentID) {
+                R.id.nav_lyrics, R.id.lyricListFragment -> {
+                    if (artistName != "" || titleName != "")
+                        searchLyric("$artistName $titleName")
+                }
+            }
+
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +77,7 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, 
         mCurrentFragmentID = savedInstanceState?.getInt(Constants.KEY_CURRENT_FRAGMENT_ID, R.id.nav_lyrics) ?: R.id.nav_lyrics
 
         mLyricViewModel = ViewModelProviders.of(this).get(LyricViewModel::class.java)
+
     }
 
 
@@ -70,6 +95,8 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, 
         app_bar_layout?.addOnOffsetChangedListener(this)
         nestedScrollView.setOnTouchListener(this)
         coordinator_layout.setOnTouchListener(this)
+        val intentFilter = IntentFilter(Constants.UPDATE_LYRICS_ACTION)
+        LocalBroadcastManager.getInstance(this).registerReceiver(localBroadcastReceiver, intentFilter)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -80,6 +107,7 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, 
     override fun onPause() {
         super.onPause()
         app_bar_layout?.removeOnOffsetChangedListener(this)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(localBroadcastReceiver)
     }
 
     private fun prepareNavDrawer() {
@@ -246,16 +274,19 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, 
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
-        val navController = Navigation.findNavController(this, R.id.nav_host)
-        val navOptions = NavOptions.Builder().setPopUpTo(R.id.nav_lyrics, false).build()
-        navController.navigate(R.id.lyricListFragment, null, navOptions)
-
-        mLyricViewModel?.setLyricQuery(query)
+        searchLyric(query)
         return false
     }
 
     override fun onQueryTextChange(newText: String): Boolean {
         return false
+    }
+
+    private fun searchLyric(query: String) {
+        val navController = Navigation.findNavController(this, R.id.nav_host)
+        val navOptions = NavOptions.Builder().setPopUpTo(R.id.nav_lyrics, false).build()
+        navController.navigate(R.id.lyricListFragment, null, navOptions)
+        mLyricViewModel?.setLyricQuery(query)
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
@@ -283,7 +314,7 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, 
         var imageUrl = imageUrl
         music_title.text = title
         artist_text.text = artist
-        val sp = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val sp = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val artWork = sp.getString(resources.getString(R.string.settings_key_album_art), "0")
         val imageProxy = LyricsApi.BASE_URL + "api/v1/image/?image=" + imageUrl
         when (artWork) {
@@ -300,7 +331,7 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, 
         // Hack: the collapsing toolbar title is shown on top of searchView
         // to fix that i make it transparent and reverse it when closed
         collapsing_toolbar_layout?.setCollapsedTitleTextColor(resources.getColor(R.color.transparent_white))
-        val sp = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val sp = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val showPreviousSearch = sp.getBoolean(resources.getString(R.string.settings_key_show_previous_search), true)
         if (showPreviousSearch)
             mSearchView?.setQuery(mLyricViewModel?.lastQuery, false)
@@ -309,4 +340,5 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, 
     override fun onSearchViewClosed() {
         collapsing_toolbar_layout?.setCollapsedTitleTextColor(resources.getColor(R.color.white))
     }
+
 }
